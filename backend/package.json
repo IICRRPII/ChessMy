@@ -1,0 +1,36 @@
+{
+  "name": "chessmy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "agora-access-token": "^2.0.4",
+    "axios": "^1.7.9",
+    "chess.js": "^1.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-fileupload": "^1.5.1",
+    "express-session": "^1.17.1",
+    "express-validator": "^7.2.0",
+    "google-auth-library": "^9.15.0",
+    "googleapis": "^144.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.7.0",
+    "mysql2": "^3.11.3",
+    "nodemailer": "^6.10.0",
+    "passport": "^0.4.1",
+    "passport-google-oauth2": "^0.2.0",
+    "sequelize": "^6.37.5",
+    "socket.io": "^4.8.0",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
