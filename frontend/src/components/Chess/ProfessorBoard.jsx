@@ -77,10 +77,44 @@ export default function ProfessorBoard() {
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [isPlacingMode, setIsPlacingMode] = useState(false);
   const [roomStarted, setRoomStarted] = useState(false);
+  const [isMouseDown, setIsMouseDown] = useState(false);
   const roomInputRef = useRef();
   const [boardSize, setBoardSize] = useState(Math.min(window.innerWidth - 40, 600));
   const [boardTheme, setBoardTheme] = useState("red");
   const socket = useRef(null);
+
+  const handleSquareInteraction = (square) => {
+    if (!isPlacingMode || !selectedPiece) return;
+
+    const newPosition = { ...position };
+    
+    if (selectedPiece === "empty") {
+      if (newPosition[square]) {
+        delete newPosition[square];
+      }
+    } else {
+      newPosition[square] = selectedPiece;
+    }
+
+    setPosition(newPosition);
+    const newFen = positionToFen(newPosition);
+    socket.current.emit("updatePosition", newFen);
+  };
+
+  const handleSquareMouseDown = (square) => {
+    setIsMouseDown(true);
+    handleSquareInteraction(square);
+  };
+
+  const handleSquareMouseEnter = (square) => {
+    if (isMouseDown) {
+      handleSquareInteraction(square);
+    }
+  };
+
+  const handleSquareMouseUp = () => {
+    setIsMouseDown(false);
+  };
 
   const handleDrop = (source, target) => {
     const newPosition = { ...position };
@@ -91,8 +125,6 @@ export default function ProfessorBoard() {
       } else {
         newPosition[target] = selectedPiece;
       }
-      setIsPlacingMode(false);
-      setSelectedPiece(null);
     } else {
       if (newPosition[source]) {
         newPosition[target] = newPosition[source];
@@ -107,25 +139,7 @@ export default function ProfessorBoard() {
   };
 
   const handleSquareClick = (square) => {
-    if (!isPlacingMode || !selectedPiece) return;
-
-    const newPosition = { ...position };
-    
-    if (selectedPiece === "empty") {
-      if (newPosition[square]) {
-        delete newPosition[square];
-      } else {
-        return;
-      }
-    } else {
-      newPosition[square] = selectedPiece;
-    }
-
-    setPosition(newPosition);
-    const newFen = positionToFen(newPosition);
-    socket.current.emit("updatePosition", newFen);
-    setSelectedPiece(null);
-    setIsPlacingMode(false);
+    handleSquareInteraction(square);
   };
 
   const handlePieceClick = (piece) => {
@@ -233,13 +247,14 @@ export default function ProfessorBoard() {
         <div className="professor-layout">
           {/* Columna izquierda - Tablero */}
           <div className="professor-board-column">
-            
-            
             <div className={`professor-board-container ${boardTheme}`}>
               <Chessboard
                 position={position}
                 onPieceDrop={handleDrop}
                 onSquareClick={handleSquareClick}
+                onSquareMouseDown={handleSquareMouseDown}
+                onSquareMouseEnter={handleSquareMouseEnter}
+                onSquareMouseUp={handleSquareMouseUp}
                 arePiecesDraggable={true}
                 boardWidth={boardSize}
                 customBoardStyle={getCustomBoardStyle()}

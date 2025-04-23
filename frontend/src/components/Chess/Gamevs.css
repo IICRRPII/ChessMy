@@ -304,4 +304,83 @@
     }
   }
 
-  
+  /* Controles de búsqueda de partida */
+.gamevs-search-container {
+  background: #2a2a2a;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.gamevs-time-controls, 
+.gamevs-color-selection {
+  margin-bottom: 15px;
+}
+
+.gamevs-time-options, 
+.gamevs-color-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.gamevs-time-btn, 
+.gamevs-color-btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  background: #5a5a5a;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.gamevs-time-btn:hover, 
+.gamevs-color-btn:hover {
+  background: #4a4a4a;
+}
+
+.gamevs-time-btn.active, 
+.gamevs-color-btn.active {
+  background: #007bff;
+}
+
+.gamevs-search-btn {
+  padding: 10px 20px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.gamevs-search-btn:hover {
+  background: #218838;
+}
+
+.gamevs-search-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.gamevs-surrender-btn {
+  padding: 10px 20px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s;
+  margin-bottom: 20px;
+}
+
+.gamevs-surrender-btn:hover {
+  background: #c82333;
+}

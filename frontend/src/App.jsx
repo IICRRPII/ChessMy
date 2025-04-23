@@ -18,6 +18,7 @@ import ChessGame from "./components/Chess/ChessGame";
 import Llamadas from "./pages/Cursos/Llamadas/Llamadas";
 import ProfessorBoard from "./components/Chess/ProfessorBoard"
 import StudentBoard from "./components/Chess/StudentBoard"
+import ProfessorChallenges from "./components/Chess/ProfessorChallenges"
 
 function App() {
   return (
@@ -38,13 +39,14 @@ function App() {
           <Route path="/curso/:id" element={<ProtectedRoute> <Curso /> </ProtectedRoute>} />
 
           {/*Chess */}
-          <Route path="/jugar_vs" element={<ProtectedRoute> <Gamevs /> </ProtectedRoute>} />
+          <Route path="/jugar_vs" element={<Gamevs />} />
           <Route path="/jugar_AI" element={<ProtectedRoute> <ChessGame /> </ProtectedRoute> } />
 
           {/*Llamada Chess*/}
           <Route path="/curso/:id/llamada" element={<ProtectedRoute> <Llamadas /> </ProtectedRoute>} />
 
           <Route path="/professor-board" element={<ProfessorBoard />} />
+          <Route path="/professor-challenges" element={<ProfessorChallenges />} />
           <Route path="/student-board" element={<StudentBoard />} />
         </Routes>
       </Router>
