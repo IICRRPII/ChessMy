@@ -1262,21 +1262,15 @@ const crearEjercicioMaestro = async (req = request, res = response) => {
                 toMove: mov.toMove,
                 idUsuario: idUsuario
             })),
-            { transaction, returning: true }
+            { transaction }
         );
-
+        const relaciones = await EjerciciosRelacion.create({
+            idEjercicio: idEjercicioCompartido,
+            idEjercicioCurso: idEjercicioCurso,
+            idUsuario: idUsuario
+        }, { transaction } );
         // 3. Crear relaciones si idEjercicioCurso existe (pero no verificar si el curso existe)
-        let relacionesCreadas = [];
-        if (idEjercicioCurso) {
-            relacionesCreadas = await EjerciciosRelacion.bulkCreate(
-                ejerciciosCreados.map(ejercicio => ({
-                    idEjercicio: idEjercicioCompartido,
-                    idEjercicioCurso: idEjercicioCurso,
-                    idUsuario: idUsuario
-                })),
-                { transaction }
-            );
-        }
+        
 
         // 4. Confirmar la transacción
         await transaction.commit();
@@ -1288,12 +1282,10 @@ const crearEjercicioMaestro = async (req = request, res = response) => {
                 : 'Ejercicio creado sin relaciones',
             data: {
                 ejercicios: ejerciciosCreados.map(e => e.idEjercicio),
-                relaciones: relacionesCreadas.map(r => r.id)
             },
             metadata: {
                 totalMovimientos: ejerciciosCreados.length,
-                totalRelaciones: relacionesCreadas.length,
-                tieneRelaciones: !!idEjercicioCurso
+                
             }
         });
 
