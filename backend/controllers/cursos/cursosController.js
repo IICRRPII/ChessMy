@@ -1,5 +1,8 @@
 const  Usuario  = require('../../models/usuario');
 const Curso = require('../../models/cursos'); 
+
+const { sequelize } = require('../../controllers/database');
+
 // const CursoPublicacion = require('../../models/cursoPublicacion'); 
 // const PublicacionTablon = require('../../models/publicacionTablon'); 
 // const CursosPubTab = require('../../models/cursoPublicacionTablon');  
@@ -11,6 +14,8 @@ const { randomBytes } = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 const PublicacionTablon = require('../../models/publicacionTablon');
 const PublicacionComentario = require('../../models/publicacionComentarios');
+const Ejercicios = require('../../models/ejercicios');
+const EjerciciosRelacion = require('../../models/ejerciciosRelacion');
 //const PartidasUsuario = require('../../models/partidasUsuarios');
 require('dotenv').config();
 
@@ -68,6 +73,98 @@ const createCurso = async (req = request, res = response) => {
 
     } catch (error) {
         return res.status(400).json({ message: 'Error al crear el curso', error });
+    }
+};
+
+const deleteCurso = async (req = request, res = response) => {
+    const { idCurso } = req.params;
+
+    try {
+        const transaction = await sequelize.transaction();
+
+        try {
+            // 1. Obtener información del curso antes de borrar (para notificaciones)
+            const curso = await Curso.findOne({
+                where: { idCurso },
+                transaction
+            });
+
+            if (!curso) {
+                await transaction.rollback();
+                return res.status(404).json({ message: 'Curso no encontrado' });
+            }
+
+            // 2. Obtener todos los usuarios relacionados con este curso
+            const usuariosRelacionados = await UsuarioCurso.findAll({
+                where: { idCurso },
+                include: [{
+                    model: Usuario,
+                    attributes: ['idUsuario', 'correoUsuario', 'nombres', 'rolUsuario'],
+                    where: { isActive: null } // Solo usuarios activos
+                }],
+                transaction
+            });
+
+            // 3. Eliminar todas las relaciones del curso en UsuarioCurso
+            const relacionesEliminadas = await UsuarioCurso.destroy({
+                where: { idCurso },
+                transaction
+            });
+
+            // 4. Eliminar el curso mismo
+            await Curso.destroy({
+                where: { idCurso },
+                transaction
+            });
+
+            // 5. Enviar notificaciones por correo
+            const notificacionesEnviadas = [];
+            for (const relacion of usuariosRelacionados) {
+                if (relacion.Usuario && relacion.Usuario.correoUsuario) {
+                    const esMaestro = relacion.Usuario.rolUsuario === 'maestro';
+                    const asunto = esMaestro 
+                        ? 'Curso eliminado - ChessMy' 
+                        : 'Cambios en tus cursos - ChessMy';
+                    
+                    const mensaje = esMaestro
+                        ? `Hola ${relacion.Usuario.nombres},\n\n` +
+                          `El curso "${curso.nombreCurso}" que tenías a tu cargo ha sido eliminado de nuestra plataforma.\n\n` +
+                          `Si necesitas más información, por favor contáctanos respondiendo a este correo.\n\n` +
+                          `Atentamente,\nEl equipo de ChessMy`
+                        : `Hola ${relacion.Usuario.nombres},\n\n` +
+                          `El curso "${curso.nombreCurso}" en el que estabas inscrito ha sido eliminado de nuestra plataforma.\n\n` +
+                          `Lamentamos cualquier inconveniente. Si tienes dudas o necesitas asistencia, no dudes en contactarnos.\n\n` +
+                          `Atentamente,\nEl equipo de ChessMy`;
+
+                    try {
+                        await crearCorreo(relacion.Usuario.correoUsuario, asunto, mensaje);
+                        notificacionesEnviadas.push(relacion.Usuario.idUsuario);
+                    } catch (emailError) {
+                        console.error(`Error enviando correo a ${relacion.Usuario.correoUsuario}:`, emailError);
+                    }
+                }
+            }
+
+            await transaction.commit();
+            return res.status(200).json({ 
+                message: 'Curso y relaciones eliminados exitosamente',
+                cursoEliminado: idCurso,
+                relacionesEliminadas,
+                usuariosNotificados: notificacionesEnviadas.length
+            });
+
+        } catch (error) {
+            await transaction.rollback();
+            console.error('Error en la transacción deleteCurso:', error);
+            throw error;
+        }
+
+    } catch (error) {
+        console.error('Error general en deleteCurso:', error);
+        return res.status(500).json({ 
+            message: 'Error al eliminar el curso',
+            error: error.message 
+        });
     }
 };
 
@@ -204,7 +301,13 @@ const registerAlumnoToCurso = async(req = request, res = response) => {
         if (!curso) {
             return res.status(404).json({ message: 'Curso no encontrado con el cursoToken proporcionado.' });
         }
-        
+        const cursoActivo = await UsuarioCurso.findOne({ where: { idCurso:curso.idCurso, rolUsuario: 'maestro' } });
+       
+        console.log('cursoActivo', cursoActivo);
+        if(!cursoActivo){
+            return res.status(400).json({ message: 'Curso no disponible.' });
+        }
+
         const existeRelacion = await UsuarioCurso.findOne({
             where: { idUsuario, idCurso: curso.idCurso },
         });
@@ -251,6 +354,106 @@ const registerAlumnoToCurso = async(req = request, res = response) => {
     } catch (error) {
         return res.status(400).json({message: 'Error al registrar al alumno', error});
     }
+};
+
+const eliminarAlumnoToCurso = async(req = request, res = response) =>{
+    try{
+        const { idUsuario, idCurso } = req.body;
+
+        if (!idUsuario || !idCurso) {
+            return res.status(400).json({ message: 'idUsuario y idCurso son requeridos.' });
+        }
+
+        // Verificar si el curso existe
+        const curso = await Curso.findOne({ where: { idCurso } });
+        if (!curso) {
+            return res.status(404).json({ message: 'Curso no encontrado con el idCurso proporcionado.' });
+        }
+
+        // Verificar si el usuario está registrado en el curso y con rol 'alumno'
+        const relacion = await UsuarioCurso.findOne({
+            where: { idUsuario, idCurso }
+        });
+
+        if (!relacion) {
+            return res.status(404).json({ message: 'El usuario no está registrado en este curso.' });
+        }
+
+        if (relacion.rolUsuario !== 'alumno') {
+            return res.status(403).json({ message: 'No se puede eliminar al usuario porque no es un alumno en este curso.' });
+        }
+
+        // Eliminar la relación del alumno con el curso
+        await UsuarioCurso.destroy({
+            where: { idUsuario, idCurso }
+        });
+
+        const maestroRelacion = await UsuarioCurso.findOne({
+            where: { 
+                idCurso: idCurso, 
+                rolUsuario: 'maestro' 
+            }
+        });
+
+        const alumno = await Usuario.findOne({
+            where: {
+                idUsuario: idUsuario
+            }
+        });
+
+        let correoMaestro = null;
+
+        if (maestroRelacion) {
+            const maestro = await Usuario.findOne({ where: { idUsuario: maestroRelacion.idUsuario } });
+            correoMaestro = maestro?.correoUsuario || null;
+            console.log('correo maestro', correoMaestro)
+            if (correoMaestro) {
+                const asuntoMaestro = `Alumno eliminado del curso: ${curso.nombreCurso}`;
+                const mensajeMaestro = `El alumno ${alumno.nombres} ${alumno.apellidos} ha sido eliminado del curso "${curso.nombreCurso}".`;
+                await crearCorreo(correoMaestro, asuntoMaestro, mensajeMaestro);
+            }
+        }
+
+        // Enviar correo al alumno eliminado
+        if (alumno?.correoUsuario) {
+            const asuntoAlumno = `Has sido eliminado del curso: ${curso.nombreCurso}`;
+            const mensajeAlumno = `Se te ha removido del curso "${curso.nombreCurso}". Si consideras que esto fue un error, por favor contacta a tu maestro.`;
+            await crearCorreo(alumno.correoUsuario, asuntoAlumno, mensajeAlumno);
+        }
+
+        // Obtener el usuario con sus roles actualizados
+        const usuario = await Usuario.findOne({
+            where: { idUsuario },
+            include: [{
+                model: UsuarioCurso,
+                as: 'rolesEnCursos',
+                attributes: ['rolUsuario']
+            }]
+        });
+
+        // Generar nuevo token con los roles actualizados
+        const rolesPorCurso = usuario.rolesEnCursos?.map(uc => uc.rolUsuario) || [];
+        const nuevoToken = jwt.sign(
+            { 
+                userId: usuario.idUsuario,
+                email: usuario.correoUsuario,
+                rolGlobal: usuario.rolUsuario,
+                rolesPorCurso: rolesPorCurso
+            }, 
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        return res.status(200).json({
+            message: 'Alumno eliminado del curso exitosamente.',
+            curso,
+            nuevoToken
+        });
+
+    } catch (error) {
+        return res.status(400).json({message: 'Error al eliminar al alumno', error});
+    }
+
 };
 
 //---------------------------
@@ -1010,13 +1213,457 @@ const calendarEvent = async (correoMaestro, descripcionTarea, correoDestinatario
     }
 };
 */
+
+const crearEjercicioMaestro = async (req = request, res = response) => {
+    const { movimientos, idUsuario, idEjercicioCurso } = req.body;
+
+    // Validaciones básicas
+    if (!movimientos || !Array.isArray(movimientos) || movimientos.length === 0) {
+        return res.status(400).json({ 
+            success: false,
+            message: 'Se requiere un array de movimientos válido con al menos un movimiento.' 
+        });
+    }
+
+    if (!idUsuario) {
+        return res.status(400).json({ 
+            success: false,
+            message: 'El idUsuario es requerido.' 
+        });
+    }
+
+    const transaction = await sequelize.transaction();
+
+    try {
+
+        // 1. Verificar que el usuario sea maestro
+        const usuario = await Usuario.findOne({
+            where: { idUsuario: idUsuario },
+            transaction
+        });
+
+        if (!usuario || usuario.rolUsuario !== 'maestro') {
+            await transaction.rollback();
+            return res.status(403).json({ 
+                success: false,
+                message: 'Solo los maestros pueden crear ejercicios.' 
+            });
+        }
+
+        const idEjercicioCompartido = uuidv4();
+
+        // 2. Crear todos los movimientos del ejercicio
+        const ejerciciosCreados = await Ejercicios.bulkCreate(
+            movimientos.map(mov => ({
+                idEjercicio: idEjercicioCompartido,
+                ordenMovimiento: mov.ordenMovimiento,
+                fen: mov.fen,
+                fromMove: mov.fromMove,
+                toMove: mov.toMove,
+                idUsuario: idUsuario
+            })),
+            { transaction, returning: true }
+        );
+
+        // 3. Crear relaciones si idEjercicioCurso existe (pero no verificar si el curso existe)
+        let relacionesCreadas = [];
+        if (idEjercicioCurso) {
+            relacionesCreadas = await EjerciciosRelacion.bulkCreate(
+                ejerciciosCreados.map(ejercicio => ({
+                    idEjercicio: idEjercicioCompartido,
+                    idEjercicioCurso: idEjercicioCurso,
+                    idUsuario: idUsuario
+                })),
+                { transaction }
+            );
+        }
+
+        // 4. Confirmar la transacción
+        await transaction.commit();
+
+        res.status(201).json({
+            success: true,
+            message: idEjercicioCurso 
+                ? 'Ejercicio creado con relaciones' 
+                : 'Ejercicio creado sin relaciones',
+            data: {
+                ejercicios: ejerciciosCreados.map(e => e.idEjercicio),
+                relaciones: relacionesCreadas.map(r => r.id)
+            },
+            metadata: {
+                totalMovimientos: ejerciciosCreados.length,
+                totalRelaciones: relacionesCreadas.length,
+                tieneRelaciones: !!idEjercicioCurso
+            }
+        });
+
+    } catch (error) {
+        await transaction.rollback();
+        console.error('Error en crearEjercicioMaestro:', error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Error en el servidor al crear el ejercicio',
+            error: {
+                name: error.name,
+                message: error.message
+                // No exponer detalles sensibles en producción
+            } 
+        });
+    }
+};
+
+const showEjerciciosMaestro = async (req = request, res = response) => {
+    const { idUsuario } = req.params;
+
+    try {
+        // 1. Verificar que el usuario sea maestro
+        const esMaestro = await Usuario.findOne({
+            where: { idUsuario: idUsuario, rolUsuario: 'maestro' }
+        });
+
+        if (!esMaestro) {
+            return res.status(403).json({ 
+                success: false,
+                message: 'Solo los maestros pueden ver estos ejercicios.' 
+            });
+        }
+
+        // 2. Obtener todos los ejercicios únicos del maestro
+        const relaciones = await EjerciciosRelacion.findAll({
+            where: { idUsuario },
+            attributes: ['idEjercicio', 'idEjercicioCurso']
+        });
+
+        const idsEjercicios = [...new Set(relaciones.map(r => r.idEjercicio))];
+        
+        if (idsEjercicios.length === 0) {
+            return res.status(200).json({
+                success: true,
+                ejercicios: {},
+                message: 'No se encontraron ejercicios para este maestro'
+            });
+        }
+
+        const movimientos = await Ejercicios.findAll({
+            where: { idEjercicio: idsEjercicios },
+            order: [
+                ['idEjercicio', 'ASC'],
+                ['ordenMovimiento', 'ASC']
+            ]
+        });
+
+        const respuesta = {
+            ejercicios: {}
+        };
+
+        idsEjercicios.forEach(id => {
+            respuesta.ejercicios[id] = {
+                movimientos: movimientos
+                    .filter(mov => mov.idEjercicio === id)
+                    .map(mov => ({
+                        id: mov.id,
+                        ordenMovimiento: mov.ordenMovimiento,
+                        fen: mov.fen,
+                        fromMove: mov.fromMove,
+                        toMove: mov.toMove
+                    }))
+            };
+        });
+
+        res.status(200).json({
+            success: true,
+            ...respuesta,
+            metadata: {
+                totalEjercicios: idsEjercicios.length,
+                maestro: esMaestro.nombres
+            }
+        });
+
+    } catch (error) {
+        console.error('Error en showEjerciciosMaestro:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener los ejercicios',
+            error: {
+                name: error.name,
+                message: error.message
+            }
+        });
+    }
+};
+
+const showUnEjercicioMaestro = async (req = request, res = response) => {
+    const { idUsuario, idEjercicio } = req.params;
+
+    try {
+        // 1. Verificar que el usuario sea maestro
+        const esMaestro = await Usuario.findOne({
+            where: { idUsuario: idUsuario, rolUsuario: 'maestro' }
+        });
+
+        if (!esMaestro) {
+            return res.status(403).json({ 
+                success: false,
+                message: 'Solo los maestros pueden ver este ejercicio.' 
+            });
+        }
+
+        // 2. Verificar que el ejercicio pertenezca al maestro
+        const relacion = await EjerciciosRelacion.findOne({
+            where: { idUsuario, idEjercicio }
+        });
+
+        if (!relacion) {
+            return res.status(404).json({
+                success: false,
+                message: 'Ejercicio no encontrado o no pertenece a este maestro'
+            });
+        }
+
+        // 3. Obtener todos los movimientos del ejercicio
+        const movimientos = await Ejercicios.findAll({
+            where: { idEjercicio },
+            order: [['ordenMovimiento', 'ASC']]
+        });
+
+        if (movimientos.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'No se encontraron movimientos para este ejercicio'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            ejercicio: {
+                idEjercicio,
+                movimientos: movimientos.map(mov => ({
+                    id: mov.id,
+                    ordenMovimiento: mov.ordenMovimiento,
+                    fen: mov.fen,
+                    fromMove: mov.fromMove,
+                    toMove: mov.toMove
+                }))
+            },
+            metadata: {
+                maestro: esMaestro.nombres,
+                totalMovimientos: movimientos.length
+            }
+        });
+
+    } catch (error) {
+        console.error('Error en showUnEjercicioMaestro:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener el ejercicio',
+            error: {
+                name: error.name,
+                message: error.message
+            }
+        });
+    }
+};
+
+const updateMovimientoEjercicio = async (req = request, res = response) => {
+    const { idUsuario, idEjercicio, idMovimiento, fen, fromMove, toMove } = req.body;
+
+    try {
+        // 1. Verificar que el usuario sea maestro
+        const esMaestro = await Usuario.findOne({
+            where: { idUsuario: idUsuario, rolUsuario: 'maestro' }
+        });
+
+        if (!esMaestro) {
+            return res.status(403).json({ 
+                success: false,
+                message: 'Solo los maestros pueden actualizar movimientos.' 
+            });
+        }
+
+        // 2. Verificar que el ejercicio pertenezca al maestro
+        const relacion = await EjerciciosRelacion.findOne({
+            where: { idUsuario, idEjercicio }
+        });
+
+        if (!relacion) {
+            return res.status(404).json({
+                success: false,
+                message: 'Ejercicio no encontrado o no pertenece a este maestro'
+            });
+        }
+
+        // 3. Actualizar el movimiento
+        const movimientoActualizado = await Ejercicios.update(
+            { fen, fromMove, toMove },
+            { 
+                where: { id: idMovimiento, idEjercicio },
+                returning: true 
+            }
+        );
+
+        if (movimientoActualizado[0] === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Movimiento no encontrado o no pertenece a este ejercicio'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Movimiento actualizado correctamente',
+            movimiento: movimientoActualizado[1][0]
+        });
+
+    } catch (error) {
+        console.error('Error en updateMovimientoEjercicio:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al actualizar el movimiento',
+            error: {
+                name: error.name,
+                message: error.message
+            }
+        });
+    }
+};
+
+const deleteMovimientoEjercicio = async (req = request, res = response) => {
+    const { idUsuario, idEjercicio, idMovimiento } = req.body;
+
+    try {
+        // 1. Verificar que el usuario sea maestro
+        const esMaestro = await Usuario.findOne({
+            where: { idUsuario: idUsuario, rolUsuario: 'maestro' }
+        });
+
+        if (!esMaestro) {
+            return res.status(403).json({ 
+                success: false,
+                message: 'Solo los maestros pueden eliminar movimientos.' 
+            });
+        }
+
+        // 2. Verificar que el ejercicio pertenezca al maestro
+        const relacion = await EjerciciosRelacion.findOne({
+            where: { idUsuario, idEjercicio }
+        });
+
+        if (!relacion) {
+            return res.status(404).json({
+                success: false,
+                message: 'Ejercicio no encontrado o no pertenece a este maestro'
+            });
+        }
+
+        // 3. Eliminar el movimiento
+        const movimientoEliminado = await Ejercicios.destroy({
+            where: { id: idMovimiento, idEjercicio }
+        });
+
+        if (!movimientoEliminado) {
+            return res.status(404).json({
+                success: false,
+                message: 'Movimiento no encontrado o no pertenece a este ejercicio'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Movimiento eliminado correctamente',
+            idMovimientoEliminado: idMovimiento
+        });
+
+    } catch (error) {
+        console.error('Error en deleteMovimientoEjercicio:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al eliminar el movimiento',
+            error: {
+                name: error.name,
+                message: error.message
+            }
+        });
+    }
+};
+
+const deleteEjercicioMaestro = async (req = request, res = response) => {
+    const { idUsuario, idEjercicio } = req.body;
+
+    try {
+        // 1. Verificar que el usuario sea maestro
+        const esMaestro = await Usuario.findOne({
+            where: { idUsuario: idUsuario, rolUsuario: 'maestro' }
+        });
+
+        if (!esMaestro) {
+            return res.status(403).json({ 
+                success: false,
+                message: 'Solo los maestros pueden eliminar ejercicios.' 
+            });
+        }
+
+        // 2. Verificar que el ejercicio pertenezca al maestro
+        const relacion = await EjerciciosRelacion.findOne({
+            where: { idUsuario, idEjercicio }
+        });
+
+        if (!relacion) {
+            return res.status(404).json({
+                success: false,
+                message: 'Ejercicio no encontrado o no pertenece a este maestro'
+            });
+        }
+
+        // 3. Eliminar primero todos los movimientos del ejercicio
+        await Ejercicios.destroy({
+            where: { idEjercicio }
+        });
+
+        // 4. Eliminar la relación del ejercicio con el maestro
+        await EjerciciosRelacion.destroy({
+            where: { idEjercicio, idUsuario }
+        });
+
+        res.status(200).json({
+            success: true,
+            message: 'Ejercicio eliminado correctamente',
+            idEjercicioEliminado: idEjercicio,
+            metadata: {
+                maestro: esMaestro.nombres
+            }
+        });
+
+    } catch (error) {
+        console.error('Error en deleteEjercicioMaestro:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al eliminar el ejercicio',
+            error: {
+                name: error.name,
+                message: error.message
+            }
+        });
+    }
+};
+//*********************************** */
+//*********************************** */
+//*********************************** */
+//Modificar crear EjercicioCurso para que relacione el ejercicio con ejercicioCurso en ejercicioRelacion
+// Hacer el middleware para verificar que el maestro sea el maestro del curso para ejercicioCurso
+//*********************************** */
+//*********************************** */
+//*********************************** */
+
+
 module.exports = {
     //Registro y creacion de usuarios
     createCurso,
+    deleteCurso,
     getCursosComoMaestro,
     getCursosComoAlumno,
     showCurso,
     registerAlumnoToCurso,
+    eliminarAlumnoToCurso,
     getAlumnosPorMaestro,
     //Publicaciones y comentarios
     createPublicacion,
@@ -1041,4 +1688,10 @@ module.exports = {
     verEjerciciosDelUsuarioEnElCurso,
     //Correos notificacion
     crearCorreo,
+    crearEjercicioMaestro,
+    showEjerciciosMaestro,
+    showUnEjercicioMaestro,
+    updateMovimientoEjercicio,
+    deleteMovimientoEjercicio,
+    deleteEjercicioMaestro,
 }

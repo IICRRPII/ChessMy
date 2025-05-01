@@ -21,7 +21,6 @@ PublicacionTablon.init({
     fechaPublicacion: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: sequelize.literal('CURRENT_TIMESTAMP') // Opcional
     },
     tituloPublicacion: DataTypes.STRING,
     desPublicacion: DataTypes.STRING,

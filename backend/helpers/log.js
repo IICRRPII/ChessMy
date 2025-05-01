@@ -66,7 +66,7 @@ const googleCallback = async (req, res, next) => {
         try {
             const correo = user.emails[0].value;
             const usuario = await Usuario.findOne({ 
-                where: { correoUsuario: correo },
+                where: { correoUsuario: correo, isActive: null },
                 include: [{
                     model: UsuarioCurso,
                     as: 'rolesEnCursos',

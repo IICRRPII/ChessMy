@@ -149,4 +149,14 @@ const cancelPayment = async (req = request, res = response) => {
     return res.redirect("/");
 };
 
-module.exports = { createOrder, captureOrder, cancelPayment, getPlans };
+const showPagos = async (req = request, res = response) => {
+    try{
+        const pagos = await Pago.findAll();
+        return res.status(200).json(pagos);
+
+    } catch (error) {
+        return res.status(500).json({ message: "Error al cargar los pagos" });
+    }
+};
+
+module.exports = { createOrder, captureOrder, cancelPayment, getPlans, showPagos };

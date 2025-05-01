@@ -12,8 +12,8 @@ const Llamada = () => {
   const navigate = useNavigate();
   const appId = import.meta.env.VITE_AGORA_APP_ID;
   const sslEnabled = import.meta.env.VITE_AGORA_SSL === 'true';
-  const mode = import.meta.env.VITE_AGORA_MODE || 'rtc';
-  const codec = import.meta.env.VITE_AGORA_CODEC || 'vp8';
+  const mode = import.meta.env.VITE_AGORA_MODE;
+  const codec = import.meta.env.VITE_AGORA_CODEC;
   
   const clientRef = useRef(null);
   const localAudioTrackRef = useRef(null);

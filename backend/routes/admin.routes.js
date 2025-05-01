@@ -7,6 +7,7 @@ const router = express.Router();
 const {
     validarMaestroCurso,
     validarAlumnoCurso,
+    isAdmin,
     //validarUsuarioEnElCurso,
 } = require('../middlewares/middlewares');
 
@@ -21,15 +22,18 @@ const {
     captureOrder,
     cancelPayment,
     getPlans,
+    showPagos,
 } = require('../controllers/payment/payment.controller');
 
 // controllers/cursos/cursosController
 const {
     createCurso,
+    deleteCurso,
     getCursosComoMaestro, 
     getCursosComoAlumno, 
     showCurso, 
     registerAlumnoToCurso,
+    eliminarAlumnoToCurso,
     getAlumnosPorMaestro,
     
     createPublicacion,
@@ -52,6 +56,13 @@ const {
     verEjercicioCursoCompletados,
     verEjercicioUsuario,
     verEjerciciosDelUsuarioEnElCurso,
+    crearEjercicioMaestro, 
+    showEjerciciosMaestro,
+    showUnEjercicioMaestro,
+    updateMovimientoEjercicio,
+    deleteMovimientoEjercicio,
+    deleteEjercicioMaestro,
+
 } = require('../controllers/cursos/cursosController');
 
 const { createAlumno,
@@ -111,7 +122,6 @@ router.delete('/admin/:id', deleteAdmin);
 router.get('/admins', showAdmins);
 
 //solicitudes de ban
-
 router.post('/createSolicitudBan', createSolicitudBan);
 router.get('/getAllSolicitudesBan', getSolicitudesBan);
 router.delete('/deleteSolicitudBan/:id', deleteSolicitudBan);
@@ -129,22 +139,23 @@ router.get('/auth/failure', authFailure);
 router.get('/protected', isLoggedIn, protectedRoute);
 router.get('/logout', logout);
 
-
 //cursos
 router.post('/createCurso',createCurso);
+router.delete('/deleteCurso/:idCurso',deleteCurso);
 router.get('/getCurso/:id', showCurso);
 // Cursos como maestro/alumno
 router.get('/cursos/getCursosMaestro/:idUsuario', getCursosComoMaestro);
 router.get('/cursos/getCursosAlumno/:idUsuario', getCursosComoAlumno);
 router.get('/cursos/getAlumnosPorMaestro/:idUsuario', getAlumnosPorMaestro);
 router.post('/registerAlumnoToCurso', registerAlumnoToCurso );
-
+router.delete('/deleteAlumnoToCurso', eliminarAlumnoToCurso);
 
 //Paypal
 router.post('/create-order', createOrder);
 router.get("/capture-order", captureOrder);
 router.get("/cancel-payment", cancelPayment);
 router.get('/plans', getPlans);
+router.get('/pagos',isAdmin, showPagos);
 
 //Publicaciones
 router.post('/create-publicacion', validarMaestroCurso, createPublicacion);
@@ -178,4 +189,15 @@ router.get('/ver-ejercicios-del-usuario-en-el-curso/:idCurso/:idUsuario', verEje
 // test crear correo
 const { sendConfirmationEmail } = require('../config/mailer.controller');
 router.post('/send-confirmation', sendConfirmationEmail);
+
+//ejercicio test
+router.post('/crearEjercicio', crearEjercicioMaestro);
+router.get('/ejerciciosMaestro/:idUsuario', showEjerciciosMaestro);
+router.get('/ejercicioMaestro/:idUsuario/:idEjercicio', showUnEjercicioMaestro);
+router.put('/ejerciciosMaestroUpdate', updateMovimientoEjercicio);
+router.delete('/deleteMovimientoEjercicio', deleteMovimientoEjercicio);
+router.delete('/deleteEjercicioMaestro', deleteEjercicioMaestro);
+
+//router.post('/ejerciciosRelacion', crearEjercicioRelacion);
+
 module.exports = router;
