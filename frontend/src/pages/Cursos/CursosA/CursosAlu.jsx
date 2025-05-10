@@ -63,7 +63,11 @@ const CursosAlu = () => {
       setLoading(true);
       const token = localStorage.getItem('token');
       
+<<<<<<< HEAD
       const endpoint = `/api/admin/cursos/getCursosAlumno/${userId}`;
+=======
+      const endpoint = `${import.meta.env.VITE_API_URL}/api/admin/cursos/getCursosAlumno/${userId}`;
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
       const response = await fetch(endpoint, {
         headers: {
           'Authorization': `Bearer ${token}`,

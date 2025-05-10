@@ -35,7 +35,11 @@ const PagoExitoso = () => {
     e.preventDefault();
     setError('');
     try {
+<<<<<<< HEAD
       const res = await fetch('/api/admin/send-confirmation', {
+=======
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/send-confirmation`, {
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),

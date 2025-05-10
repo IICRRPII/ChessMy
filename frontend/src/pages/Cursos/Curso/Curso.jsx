@@ -65,7 +65,11 @@ const Curso = () => {
   const fetchComentarios = async (idPubTablon) => {
     try {
       const token = localStorage.getItem('token');
+<<<<<<< HEAD
       const response = await fetch(`/api/admin/comentarios/${idPubTablon}`, {
+=======
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/comentarios/${idPubTablon}`, {
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -92,7 +96,11 @@ const Curso = () => {
         setSuccessMessage(null);
         
         const token = localStorage.getItem('token');
+<<<<<<< HEAD
         const response = await fetch(`/api/admin/show-publicaciones/${decodedCourseId}`, {
+=======
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/show-publicaciones/${decodedCourseId}`, {
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -155,7 +163,11 @@ const Curso = () => {
       const userId = decoded.userId;
       const fechaFormateada = formatDateForDB(new Date());
 
+<<<<<<< HEAD
       const response = await fetch('/api/admin/create-publicacion', {
+=======
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/create-publicacion`, {
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -197,7 +209,11 @@ const Curso = () => {
       const decoded = parseJwt(token);
       const userId = decoded.userId;
 
+<<<<<<< HEAD
       const response = await fetch('/api/admin/comentario', {
+=======
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/comentario`, {
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -253,7 +269,11 @@ const Curso = () => {
       const token = localStorage.getItem('token');
       const userId = getCurrentUserId();
 
+<<<<<<< HEAD
       const response = await fetch('/api/admin/comentario', {
+=======
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/comentario`, {
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -333,7 +353,11 @@ const handleJoinCall = async () => {
       setIsLoading(true);
       setError(null);
 
+<<<<<<< HEAD
       const response = await fetch('/api/admin/generate-token', {
+=======
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/generate-token`, {
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

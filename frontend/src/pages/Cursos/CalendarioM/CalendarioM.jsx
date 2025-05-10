@@ -29,7 +29,11 @@ const CalendarioM = ({ idCurso }) => {
     const fetchTareas = async () => {
       try {
         const token = localStorage.getItem('token');
+<<<<<<< HEAD
         const response = await fetch(`/api/admin/ver-ejercicios-curso/${idCurso}`, {
+=======
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/ver-ejercicios-curso/${idCurso}`, {
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -113,7 +117,11 @@ const CalendarioM = ({ idCurso }) => {
       const decoded = JSON.parse(atob(token.split('.')[1]));
       const idUsuario = decoded.userId;
 
+<<<<<<< HEAD
       const response = await fetch('/api/admin/agregar-ejercicio-curso', {
+=======
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/agregar-ejercicio-curso`, {
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -162,7 +170,11 @@ const CalendarioM = ({ idCurso }) => {
     
     try {
       const token = localStorage.getItem('token');
+<<<<<<< HEAD
       const response = await fetch('/api/admin/eliminar-ejercicio-curso', {
+=======
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/eliminar-ejercicio-curso`, {
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

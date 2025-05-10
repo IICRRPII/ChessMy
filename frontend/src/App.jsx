@@ -28,6 +28,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/auth-success" element={<AuthSuccessRedirect />} />
           <Route path="/Inicio" element={<ProtectedRoute> <Inicio /> </ProtectedRoute>} />
+<<<<<<< HEAD
           <Route path="/pago-exitoso" element={<ProtectedRoute> <PagoExitoso /> </ProtectedRoute>} />
           <Route path="/lista_ejercicios" element={<ProtectedRoute> <ListEjercicios /> </ProtectedRoute>} />
           <Route path="/ataque_doble" element={<ProtectedRoute> <Ataquedoble /> </ProtectedRoute>} />
@@ -44,6 +45,24 @@ function App() {
 
           {/*Llamada Chess*/}
           <Route path="/curso/:id/llamada" element={<ProtectedRoute> <Llamadas /> </ProtectedRoute>} />
+=======
+          <Route path="/pago-exitoso" element={<PagoExitoso />} />
+          <Route path="/lista_ejercicios" element={ <ListEjercicios /> } />
+          <Route path="/ataque_doble" element={ <Ataquedoble /> } />
+          <Route path="/ataque_doble_ejercicios" element={ <AtaDobleEx />} />
+          <Route path="/desviacion" element={ <Desviacion /> } />
+          <Route path="/desviacion_ejercicios" element={ <DesviacionEx /> } />
+          <Route path="/tus_cursos" element={<CursosMaes />} />
+          <Route path="/tus_clases" element={ <CursosAlu /> } />
+          <Route path="/curso/:id" element={ <Curso /> } />
+
+          {/*Chess */}
+          <Route path="/jugar_vs" element={<Gamevs />} />
+          <Route path="/jugar_AI" element={ <ChessGame /> } />
+
+          {/*Llamada Chess*/}
+          <Route path="/curso/:id/llamada" element={ <Llamadas />} />
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
           <Route path="/professor-board" element={<ProfessorBoard />} />
           <Route path="/professor-challenges" element={<ProfessorChallenges />} />

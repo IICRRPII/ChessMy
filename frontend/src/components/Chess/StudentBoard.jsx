@@ -59,7 +59,7 @@ export default function StudentBoard() {
     setRoomCode(code);
     
     if (!socket.current) {
-      socket.current = io("http://localhost:8080/classroom");
+      socket.current = io(`${import.meta.env.VITE_BACKEND_URL}/classroom`);
       setupSocketListeners();
     }
     
@@ -95,7 +95,7 @@ export default function StudentBoard() {
   };
 
   useEffect(() => {
-    socket.current = io("http://localhost:8080/classroom");
+    socket.current = io(`https://chessmyproduccion.onrender.com/classroom`);
     setupSocketListeners();
 
     return () => {
