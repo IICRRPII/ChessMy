@@ -136,7 +136,7 @@ const ChessGame = () => {
                 clearInterval(timerRef.current);
               }
             }
-          }, 100); // Usamos 0ms para que se ejecute lo antes posible
+          },); 
         }
         
         return true;
@@ -330,9 +330,9 @@ const ChessGame = () => {
                   onChange={(e) => setDifficulty(parseInt(e.target.value))}
                   className="gamevs-control-btn"
                 >
-                  <option value="1">Fácil</option>
+                  <option value="2">Fácil</option>
                   <option value="3">Medio</option>
-                  <option value="5">Difícil</option>
+                  <option value="4">Difícil</option>
                 </select>
               </div>
             </div>

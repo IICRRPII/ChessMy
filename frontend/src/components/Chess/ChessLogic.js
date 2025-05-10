@@ -7,12 +7,19 @@ export default class ChessLogic {
     this.positionCount = 0;
     this.pstSelf = { w: pst_w, b: pst_b };
     this.pstOpponent = { w: pst_b, b: pst_w };
+    this.transpositionTable = {}; // Tabla para almacenar posiciones ya evaluadas
+    this.STACK_SIZE = 10;
+    this.timer = null;
+    this.undoStack = [];
+  }
+
+  hashPosition(fen) {
+    return fen.split(' ')[0];
   }
 
   evaluateBoard(move, prevSum, color) {
     const game = this.game;
     
-    // Usar los métodos correctos de chess.js (varios han cambiado)
     if (game.isCheckmate()) {
       return move.color === color ? 10 ** 10 : -(10 ** 10);
     }
@@ -34,10 +41,12 @@ export default class ChessLogic {
       move.to.charCodeAt(0) - 'a'.charCodeAt(0),
     ];
 
+    // Evaluación más rápida para posiciones terminales
     if (prevSum < -1500 && move.piece === 'k') {
       move.piece = 'k_e';
     }
 
+    // Manejo de capturas
     if (move.captured) {
       if (move.color === color) {
         prevSum += weights[move.captured] + this.pstOpponent[move.color][move.captured][to[0]][to[1]];
@@ -46,8 +55,9 @@ export default class ChessLogic {
       }
     }
 
+    // Manejo de promociones
     if (move.promotion) {
-      move.promotion = 'q';
+      move.promotion = 'q'; // Siempre promocionar a reina para simplificar
       if (move.color === color) {
         prevSum -= weights[move.piece] + this.pstSelf[move.color][move.piece][from[0]][from[1]];
         prevSum += weights[move.promotion] + this.pstSelf[move.color][move.promotion][to[0]][to[1]];
@@ -56,6 +66,7 @@ export default class ChessLogic {
         prevSum -= weights[move.promotion] + this.pstSelf[move.color][move.promotion][to[0]][to[1]];
       }
     } else {
+      // Movimientos normales
       if (move.color !== color) {
         prevSum += this.pstSelf[move.color][move.piece][from[0]][from[1]];
         prevSum -= this.pstSelf[move.color][move.piece][to[0]][to[1]];
@@ -70,20 +81,44 @@ export default class ChessLogic {
 
   minimax(depth, alpha, beta, isMaximizingPlayer, sum, color) {
     this.positionCount++;
-    const children = this.game.moves({ verbose: true }).sort(() => 0.5 - Math.random());
+    
+    // Verificar en la tabla de transposición primero
+    const fenKey = this.hashPosition(this.game.fen());
+    if (this.transpositionTable[fenKey] && this.transpositionTable[fenKey].depth >= depth) {
+      return [null, this.transpositionTable[fenKey].value];
+    }
 
-    if (depth === 0 || children.length === 0) {
+    // Obtener movimientos y ordenarlos para mejor pruning
+    const children = this.game.moves({ verbose: true });
+    
+    // Ordenar movimientos: capturas primero, luego amenazas, luego aleatorio
+    children.sort((a, b) => {
+      // Priorizar capturas
+      if (a.captured && !b.captured) return -1;
+      if (!a.captured && b.captured) return 1;
+      
+      // Priorizar jaques
+      if (a.san.includes('+') && !b.san.includes('+')) return -1;
+      if (!a.san.includes('+') && b.san.includes('+')) return 1;
+      
+      return 0.5 - Math.random(); // Aleatorio para el resto
+    });
+
+    // Reducir profundidad si hay muchas opciones
+    const effectiveDepth = children.length > 30 ? depth - 1 : depth;
+    
+    if (effectiveDepth <= 0 || children.length === 0) {
       return [null, sum];
     }
 
     let bestValue = isMaximizingPlayer ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
-    let bestMove = null;
+    let bestMove = children[0]; // Movimiento por defecto
 
     for (const currMove of children) {
       const moveResult = this.game.move(currMove);
       const newSum = this.evaluateBoard(moveResult, sum, color);
       const [_, childValue] = this.minimax(
-        depth - 1,
+        effectiveDepth - 1,
         alpha,
         beta,
         !isMaximizingPlayer,
@@ -110,21 +145,41 @@ export default class ChessLogic {
       if (alpha >= beta) break;
     }
 
+    // Almacenar en la tabla de transposición
+    this.transpositionTable[fenKey] = {
+      depth: depth,
+      value: bestValue
+    };
+
     return [bestMove, bestValue];
   }
 
-  getBestMove(color, depth) {
+  getBestMove(color, maxDepth) {
     this.positionCount = 0;
     const startTime = performance.now();
     
-    const [bestMove, bestValue] = this.minimax(
-      depth,
-      Number.NEGATIVE_INFINITY,
-      Number.POSITIVE_INFINITY,
-      true,
-      color === 'b' ? this.globalSum : -this.globalSum,
-      color
-    );
+    let bestMove = null;
+    let bestValue = color === 'b' ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+    
+    // Búsqueda iterativa desde profundidad 1 hasta maxDepth
+    for (let depth = 1; depth <= maxDepth; depth++) {
+      // Limitar el tiempo por profundidad (2 segundos máximo)
+      if (performance.now() - startTime > 2000 && depth > 2) break;
+      
+      const [currentMove, currentValue] = this.minimax(
+        depth,
+        Number.NEGATIVE_INFINITY,
+        Number.POSITIVE_INFINITY,
+        true,
+        color === 'b' ? this.globalSum : -this.globalSum,
+        color
+      );
+      
+      if (currentMove) {
+        bestMove = currentMove;
+        bestValue = currentValue;
+      }
+    }
 
     if (bestMove) {
       this.globalSum = this.evaluateBoard(bestMove, this.globalSum, 'b');
@@ -196,6 +251,7 @@ export default class ChessLogic {
     this.game.reset();
     this.globalSum = 0;
     this.undoStack = [];
+    this.transpositionTable = {}; // Limpiar la tabla de transposición
     if (this.timer) {
       clearTimeout(this.timer);
       this.timer = null;
@@ -205,6 +261,7 @@ export default class ChessLogic {
 
   loadPosition(fen) {
     this.game.load(fen);
+    this.transpositionTable = {}; // Limpiar la tabla de transposición
     return this.game.fen();
   }
 
@@ -290,7 +347,6 @@ export default class ChessLogic {
     return this.game.isGameOver();
   }
 
-  // Para usar con react-chessboard
   handleDrop(sourceSquare, targetSquare) {
     const move = this.makeMove({
       from: sourceSquare,
@@ -313,7 +369,6 @@ export default class ChessLogic {
     return true;
   }
 
-  // Para resaltar movimientos
   getHighlightedSquares() {
     const highlights = {};
     const history = this.game.history({ verbose: true });
@@ -344,4 +399,3 @@ export default class ChessLogic {
     } : null;
   }
 }
-
