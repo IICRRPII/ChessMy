@@ -28,24 +28,6 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/auth-success" element={<AuthSuccessRedirect />} />
           <Route path="/Inicio" element={<ProtectedRoute> <Inicio /> </ProtectedRoute>} />
-<<<<<<< HEAD
-          <Route path="/pago-exitoso" element={<ProtectedRoute> <PagoExitoso /> </ProtectedRoute>} />
-          <Route path="/lista_ejercicios" element={<ProtectedRoute> <ListEjercicios /> </ProtectedRoute>} />
-          <Route path="/ataque_doble" element={<ProtectedRoute> <Ataquedoble /> </ProtectedRoute>} />
-          <Route path="/ataque_doble_ejercicios" element={<ProtectedRoute> <AtaDobleEx /> </ProtectedRoute>} />
-          <Route path="/desviacion" element={<ProtectedRoute> <Desviacion /> </ProtectedRoute>} />
-          <Route path="/desviacion_ejercicios" element={<ProtectedRoute> <DesviacionEx /> </ProtectedRoute>} />
-          <Route path="/tus_cursos" element={<ProtectedRoute> <CursosMaes /> </ProtectedRoute>} />
-          <Route path="/tus_clases" element={<ProtectedRoute> <CursosAlu /> </ProtectedRoute>} />
-          <Route path="/curso/:id" element={<ProtectedRoute> <Curso /> </ProtectedRoute>} />
-
-          {/*Chess */}
-          <Route path="/jugar_vs" element={<Gamevs />} />
-          <Route path="/jugar_AI" element={<ProtectedRoute> <ChessGame /> </ProtectedRoute> } />
-
-          {/*Llamada Chess*/}
-          <Route path="/curso/:id/llamada" element={<ProtectedRoute> <Llamadas /> </ProtectedRoute>} />
-=======
           <Route path="/pago-exitoso" element={<PagoExitoso />} />
           <Route path="/lista_ejercicios" element={ <ListEjercicios /> } />
           <Route path="/ataque_doble" element={ <Ataquedoble /> } />
@@ -62,7 +44,6 @@ function App() {
 
           {/*Llamada Chess*/}
           <Route path="/curso/:id/llamada" element={ <Llamadas />} />
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
           <Route path="/professor-board" element={<ProfessorBoard />} />
           <Route path="/professor-challenges" element={<ProfessorChallenges />} />
