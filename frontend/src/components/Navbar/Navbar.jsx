@@ -55,7 +55,11 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
+<<<<<<< HEAD
       await fetch("/api/admin/logout", { method: "GET" });
+=======
+      await fetch(`${import.meta.env.VITE_API_URL}/api/admin/logout`, { method: "GET" });
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
       localStorage.removeItem("token");
       window.location.href = "/";
     } catch (error) {
@@ -78,7 +82,11 @@ const Navbar = () => {
             return;
         }
 
+<<<<<<< HEAD
         const response = await fetch("/api/admin/registerAlumnoToCurso", {
+=======
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/registerAlumnoToCurso`, {
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

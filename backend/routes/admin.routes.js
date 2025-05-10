@@ -7,6 +7,10 @@ const router = express.Router();
 const {
     validarMaestroCurso,
     validarAlumnoCurso,
+<<<<<<< HEAD
+=======
+    isAdmin,
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
     //validarUsuarioEnElCurso,
 } = require('../middlewares/middlewares');
 
@@ -21,15 +25,27 @@ const {
     captureOrder,
     cancelPayment,
     getPlans,
+<<<<<<< HEAD
+=======
+    showPagos,
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 } = require('../controllers/payment/payment.controller');
 
 // controllers/cursos/cursosController
 const {
     createCurso,
+<<<<<<< HEAD
+=======
+    deleteCurso,
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
     getCursosComoMaestro, 
     getCursosComoAlumno, 
     showCurso, 
     registerAlumnoToCurso,
+<<<<<<< HEAD
+=======
+    eliminarAlumnoToCurso,
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
     getAlumnosPorMaestro,
     
     createPublicacion,
@@ -52,6 +68,16 @@ const {
     verEjercicioCursoCompletados,
     verEjercicioUsuario,
     verEjerciciosDelUsuarioEnElCurso,
+<<<<<<< HEAD
+=======
+    crearEjercicioMaestro, 
+    showEjerciciosMaestro,
+    showUnEjercicioMaestro,
+    updateMovimientoEjercicio,
+    deleteMovimientoEjercicio,
+    deleteEjercicioMaestro,
+
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 } = require('../controllers/cursos/cursosController');
 
 const { createAlumno,
@@ -111,7 +137,10 @@ router.delete('/admin/:id', deleteAdmin);
 router.get('/admins', showAdmins);
 
 //solicitudes de ban
+<<<<<<< HEAD
 
+=======
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 router.post('/createSolicitudBan', createSolicitudBan);
 router.get('/getAllSolicitudesBan', getSolicitudesBan);
 router.delete('/deleteSolicitudBan/:id', deleteSolicitudBan);
@@ -129,22 +158,36 @@ router.get('/auth/failure', authFailure);
 router.get('/protected', isLoggedIn, protectedRoute);
 router.get('/logout', logout);
 
+<<<<<<< HEAD
 
 //cursos
 router.post('/createCurso',createCurso);
+=======
+//cursos
+router.post('/createCurso',createCurso);
+router.delete('/deleteCurso/:idCurso',deleteCurso);
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 router.get('/getCurso/:id', showCurso);
 // Cursos como maestro/alumno
 router.get('/cursos/getCursosMaestro/:idUsuario', getCursosComoMaestro);
 router.get('/cursos/getCursosAlumno/:idUsuario', getCursosComoAlumno);
 router.get('/cursos/getAlumnosPorMaestro/:idUsuario', getAlumnosPorMaestro);
 router.post('/registerAlumnoToCurso', registerAlumnoToCurso );
+<<<<<<< HEAD
 
+=======
+router.delete('/deleteAlumnoToCurso', eliminarAlumnoToCurso);
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
 //Paypal
 router.post('/create-order', createOrder);
 router.get("/capture-order", captureOrder);
 router.get("/cancel-payment", cancelPayment);
 router.get('/plans', getPlans);
+<<<<<<< HEAD
+=======
+router.get('/pagos',isAdmin, showPagos);
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
 //Publicaciones
 router.post('/create-publicacion', validarMaestroCurso, createPublicacion);
@@ -178,4 +221,18 @@ router.get('/ver-ejercicios-del-usuario-en-el-curso/:idCurso/:idUsuario', verEje
 // test crear correo
 const { sendConfirmationEmail } = require('../config/mailer.controller');
 router.post('/send-confirmation', sendConfirmationEmail);
+<<<<<<< HEAD
+=======
+
+//ejercicio test
+router.post('/crearEjercicio', crearEjercicioMaestro);
+router.get('/ejerciciosMaestro/:idUsuario', showEjerciciosMaestro);
+router.get('/ejercicioMaestro/:idUsuario/:idEjercicio', showUnEjercicioMaestro);
+router.put('/ejerciciosMaestroUpdate', updateMovimientoEjercicio);
+router.delete('/deleteMovimientoEjercicio', deleteMovimientoEjercicio);
+router.delete('/deleteEjercicioMaestro', deleteEjercicioMaestro);
+
+//router.post('/ejerciciosRelacion', crearEjercicioRelacion);
+
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 module.exports = router;

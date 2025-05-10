@@ -103,7 +103,7 @@ export default function Gamevs() {
     };
 
     useEffect(() => {
-        socket.current = io("http://localhost:8080/game", {
+        socket.current = io(`${import.meta.env.VITE_API_URL}/game`, {
             path: "/socket.io",
             reconnection: true,
             reconnectionAttempts: Infinity,

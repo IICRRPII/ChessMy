@@ -184,7 +184,7 @@ export default function ProfessorBoard() {
   };
 
   useEffect(() => {
-    socket.current = io("http://localhost:8080/classroom");
+    socket.current = io(`${import.meta.env.VITE_API_URL}/classroom`);
     setupSocketListeners();
 
     return () => {

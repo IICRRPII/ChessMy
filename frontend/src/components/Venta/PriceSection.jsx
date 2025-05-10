@@ -37,7 +37,11 @@ const PriceSection = () => {
     const fetchPlans = async () => {
       setIsLoading(true);
       try {
+<<<<<<< HEAD
         const response = await fetch(`/api/admin/plans`);
+=======
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/plans`);
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         
         if (!response.ok) {
           throw new Error(`Error HTTP: ${response.status}`);
@@ -70,7 +74,11 @@ const PriceSection = () => {
     setPaymentLoading(true);
     
     try {
+<<<<<<< HEAD
       const response = await fetch(`/api/admin/create-order`, {
+=======
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/create-order`, {
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

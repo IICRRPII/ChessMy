@@ -12,8 +12,13 @@ const Llamada = () => {
   const navigate = useNavigate();
   const appId = import.meta.env.VITE_AGORA_APP_ID;
   const sslEnabled = import.meta.env.VITE_AGORA_SSL === 'true';
+<<<<<<< HEAD
   const mode = import.meta.env.VITE_AGORA_MODE || 'rtc';
   const codec = import.meta.env.VITE_AGORA_CODEC || 'vp8';
+=======
+  const mode = import.meta.env.VITE_AGORA_MODE;
+  const codec = import.meta.env.VITE_AGORA_CODEC;
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
   
   const clientRef = useRef(null);
   const localAudioTrackRef = useRef(null);
@@ -105,7 +110,11 @@ const Llamada = () => {
         await clientRef.current.join(
           appId,
           agoraData.channel,
+<<<<<<< HEAD
           null,
+=======
+          agoraData.token,
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
           agoraData.uid
         );
         console.log('Unido al canal exitosamente');

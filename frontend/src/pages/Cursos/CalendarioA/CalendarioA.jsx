@@ -130,7 +130,11 @@ const CalendarioA = () => {
   const fetchEjerciciosCurso = useCallback(async (cursoId) => {
     try {
       const token = localStorage.getItem('token');
+<<<<<<< HEAD
       const response = await fetch(`/api/admin/ver-ejercicios-curso/${cursoId}`, {
+=======
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/ver-ejercicios-curso/${cursoId}`, {
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -153,7 +157,11 @@ const CalendarioA = () => {
   const fetchEjerciciosAlumno = useCallback(async (userId, cursoId) => {
     try {
       const token = localStorage.getItem('token');
+<<<<<<< HEAD
       const response = await fetch(`/api/admin/ver-ejercicios-del-usuario-en-el-curso/${cursoId}/${userId}`, {
+=======
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/ver-ejercicios-del-usuario-en-el-curso/${cursoId}/${userId}`, {
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

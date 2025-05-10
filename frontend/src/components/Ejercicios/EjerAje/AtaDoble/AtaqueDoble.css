@@ -1,0 +1,121 @@
+.content-info{
+  background-color: #e9e9e9;
+}
+.content-info h1{
+    font-size: 2.5rem; 
+    text-align: center; 
+    color: #333;
+}
+
+.contenedor-datos{
+    padding: 20px; 
+    background-color: #fff; 
+    border-radius: 8px; 
+    margin: 20px auto 0; 
+    max-width: 800px;
+}
+.contenedor-datos h2{
+    font-size: 1.8rem; 
+    color: #555;
+}
+.contenedor-datos p{
+    font-size: 1rem; 
+    color: #666; 
+    line-height: 1.6;
+}
+.contenedor-datos ul{
+    font-size: 1rem; 
+    color: #666; 
+    line-height: 1.6; 
+    margin-left: 20px;
+}
+.contenedor-imagen-ej{
+    text-align: center; 
+    margin: 20px 0;
+}
+.contenedor-imagen-ej img{
+    max-width: 25%; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.contenedor-imagen-ej p{
+    font-size: 0.9rem; 
+    color: #888; 
+    margin-top: 10px;
+}
+
+.seccion-videos {
+    position: relative;
+    text-align: center;
+  }
+  
+  /* Fondo sombreado */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Sombra del fondo */
+    z-index: 50;
+    display: none; /* Ocultar por defecto */
+    transition: opacity 0.3s ease;
+    opacity: 0; /* Transición para aparecer/desaparecer */
+  }
+  
+  /* Mostrar el fondo sombreado */
+  .overlay.active {
+    display: block;
+    opacity: 1;
+  }
+  
+  /* Envoltorio del video */
+  .video-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 350px; /* Tamaño inicial */
+    height: 250px;
+    transition: all 0.3s ease;
+    z-index: 100; /* Sobre el sombreado */
+  }
+  
+  /* Estado activo: fondo sombreado y centrado */
+  .video-wrapper.active {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1080px; /* Tamaño fijo */
+    height: 600px;
+    z-index: 101; /* Por encima del sombreado */
+  }
+  
+  /* Estilo del iframe */
+  .video-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+  }
+  
+  /* Botón para cerrar el video */
+  .close-video {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    background-color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    display: none;
+    z-index: 102;
+  }
+  
+  .video-wrapper.active .close-video {
+    display: block;
+  }

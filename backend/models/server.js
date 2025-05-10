@@ -1,4 +1,8 @@
 const express = require('express');
+<<<<<<< HEAD
+=======
+require('dotenv').config();
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 const cors = require('cors');
 const fileupload = require('express-fileupload');
 const passport = require('passport');
@@ -14,7 +18,12 @@ class Server {
         this.server = http.createServer(this.app);
         this.io = socketIo(this.server, { 
             cors: {
+<<<<<<< HEAD
                 origin: 'http://localhost:5173',
+=======
+                //origin: `http://localhost:5173`,
+                origin: process.env.CHESSMY_FRONT,
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
                 methods: ['GET', 'POST']
             }
         });
@@ -36,12 +45,26 @@ class Server {
     }
 
     middlwares() {
+<<<<<<< HEAD
         this.app.use(cors({
             origin: 'http://localhost:5173',
+=======
+        
+        this.app.use(cors({
+            //origin: 'http://localhost:5173',
+            origin: [
+                process.env.CHESSMY_FRONT, 
+                'http://localhost:5173'
+            ],
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
             methods: ['GET', 'POST', 'PUT', 'DELETE'],
             credentials: true,
         }));
         
+<<<<<<< HEAD
+=======
+        this.app.use(cors());
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         this.app.use(express.static('public'));
         this.app.use(fileupload({
             useTempFiles: true,
@@ -50,7 +73,11 @@ class Server {
     }
     
     async conectarDB() {
+<<<<<<< HEAD
         console.log('Entrando a dbCOn');
+=======
+      //  console.log('Entrando a dbCOn');
+>>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         await dbConnection();
     }
 
