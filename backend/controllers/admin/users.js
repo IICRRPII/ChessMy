@@ -1,22 +1,5 @@
 
 const  Usuario  = require('../../models/usuario');
-<<<<<<< HEAD
-const SolicitudesBan = require('../../models/solicitudesBan'); 
-const { request, response } = require('express');
-
-console.log(Usuario);
-// **Alumno CRUD Operations**
-const createAlumno = async (req = request, res = response) => {
-    
-    console.log('body1',req.body);
-
-    try {
-        const rolUsuario = 'alumno';
-        console.log('body',req.body);
-        const alumno = await Usuario.create({
-            ...req.body,
-            rolUsuario: rolUsuario
-=======
 const UsuarioCurso = require('../../models/usuariosCursos');
 const SolicitudesBan = require('../../models/solicitudesBan'); 
 const { request, response } = require('express');
@@ -41,7 +24,6 @@ const createAlumno = async (req = request, res = response) => {
             ...req.body,
             rolUsuario: rolUsuario,
             fechaRegistro: fecha
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         });
         return res.status(201).json(alumno);
     } catch (error) {
@@ -51,11 +33,7 @@ const createAlumno = async (req = request, res = response) => {
 };
 
 const showAlumnos = async (req = request, res = response) => {
-<<<<<<< HEAD
-    console.log('body1',req.body);
-=======
    // console.log('body1',req.body);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
     try {
         const alumnos = await Usuario.findAll({ where: { rolUsuario: 'alumno', isActive: null } });
         return res.status(200).json(alumnos);
@@ -65,11 +43,7 @@ const showAlumnos = async (req = request, res = response) => {
 };
 
 const getUsuarioById = async (req = request, res = response) => {
-<<<<<<< HEAD
-    console.log('req',req);
-=======
     //console.log('req',req);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
     try {
         const usuario = await Usuario.findOne({ where: { idUsuario: req.params.id, isActive: null } });
@@ -80,11 +54,7 @@ const getUsuarioById = async (req = request, res = response) => {
 };
 
 const updateAlumno = async (req = request, res = response) => {
-<<<<<<< HEAD
-    console.log('body1',req.body);
-=======
    // console.log('body1',req.body);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
     const { id } = req.params;
     const data = req.body;
@@ -98,37 +68,21 @@ const updateAlumno = async (req = request, res = response) => {
     }
 };
 
-<<<<<<< HEAD
-=======
 /*
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 const deleteAlumno = async (req = request, res = response) => {
     console.log('body1',req.body);
 
     const { id } = req.params;
 
     try {
-<<<<<<< HEAD
-=======
         await UsuarioCurso.destroy({ where: { idUsuario: id } });
 
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         await Usuario.update({ isActive: new Date().toISOString() }, { where: { idUsuario: id, rolUsuario: 'alumno' } });
         return res.status(200).json({ message: 'Alumno eliminado' });
     } catch (error) {
         return res.status(500).json({ message: 'Error al eliminar alumno', error });
     }
 };
-<<<<<<< HEAD
-
-// **Maestro CRUD Operations**
-const createMaestro = async (req = request, res = response) => {
-    console.log('body1',req.body);
-
-    try {
-        const data = { ...req.body, rolUsuario: 'maestro' };
-        const maestro = await Usuario.create(data);
-=======
 */
 const deleteAlumno = async (req = request, res = response) => {
     const { id } = req.params;
@@ -239,17 +193,12 @@ const createMaestro = async (req = request, res = response) => {
         // Enviar correo
         await crearCorreo(maestro.correoUsuario, asunto, mensaje);
 
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         return res.status(201).json(maestro);
     } catch (error) {
         return res.status(400).json({ message: 'Error al crear maestro', error });
     }
 };
 
-<<<<<<< HEAD
-const showMaestros = async (req = request, res = response) => {
-    console.log('body1',req.body);
-=======
 const crearCorreo = async (destinatario, asunto, mensaje) => {
     //console.log('Enter to crearCorreo');
 
@@ -274,7 +223,6 @@ const crearCorreo = async (destinatario, asunto, mensaje) => {
 
 const showMaestros = async (req = request, res = response) => {
   //  console.log('body1',req.body);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
     try {
         const maestros = await Usuario.findAll({ where: { rolUsuario: 'maestro', isActive: null } });
@@ -283,8 +231,6 @@ const showMaestros = async (req = request, res = response) => {
         return res.status(500).json({ message: 'Error al mostrar maestros', error });
     }
 };
-<<<<<<< HEAD
-=======
 //***************************************************************** */
 //***************************************************************** */
 //***************************************************************** */
@@ -293,7 +239,6 @@ const showMaestros = async (req = request, res = response) => {
 //***************************************************************** */
 //***************************************************************** */
 //***************************************************************** */
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
 const updateMaestro = async (req = request, res = response) => {
     console.log('body1',req.body);
@@ -310,10 +255,7 @@ const updateMaestro = async (req = request, res = response) => {
     }
 };
 
-<<<<<<< HEAD
-=======
 /*
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 const deleteMaestro = async (req = request, res = response) => {
     console.log('body1',req.body);
 
@@ -327,12 +269,6 @@ const deleteMaestro = async (req = request, res = response) => {
     }
 
 };
-<<<<<<< HEAD
-
-// **Admin CRUD Operations**
-const createAdmin = async (req = request, res = response) => {
-    console.log('body1',req.body);
-=======
 */
 /*
 const deleteMaestro = async (req = request, res = response) => {
@@ -537,7 +473,6 @@ const deleteMaestro = async (req = request, res = response) => {
 // **Admin CRUD Operations**
 const createAdmin = async (req = request, res = response) => {
   //  console.log('body1',req.body);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
     try {
         const data = { ...req.body, rolUsuario: 'admin' };
@@ -549,11 +484,7 @@ const createAdmin = async (req = request, res = response) => {
 };
 
 const showAdmins = async (req = request, res = response) => {
-<<<<<<< HEAD
-    console.log('body1',req.body);
-=======
    // console.log('body1',req.body);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
     try {
         const admins = await Usuario.findAll({ where: { rolUsuario: 'admin', isActive: null } });
@@ -578,11 +509,7 @@ const updateAdmin = async (req = request, res = response) => {
 };
 
 const deleteAdmin = async (req = request, res = response) => {
-<<<<<<< HEAD
-    console.log('body1',req.body);
-=======
    // console.log('body1',req.body);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
     const { id } = req.params;
 
@@ -599,11 +526,7 @@ const deleteAdmin = async (req = request, res = response) => {
 //solicitudes de ban 
 
 const createSolicitudBan = async (req = request, res = response) => {
-<<<<<<< HEAD
-    console.log('body1', req.body);
-=======
   //  console.log('body1', req.body);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
     try {
         const { idUsuarioSol, idUsuarioBan, descripcion, estado } = req.body;
@@ -650,11 +573,7 @@ const getSolicitudesBan = async (req = request, res = response) => {
 };
 
 const deleteSolicitudBan = async (req = request, res = response) => {
-<<<<<<< HEAD
-    console.log('body', req.body);
-=======
    // console.log('body', req.body);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
     try {
         const { id } = req.params; 

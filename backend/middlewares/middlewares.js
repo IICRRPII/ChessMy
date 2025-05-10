@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-const UsuarioCurso = require('../models/usuariosCursos');  
-const { request, response } = require('express');
-
-
-/*
-const isAlumno = async(req = request,res = response, next) => {
-
-    try{
-        //const curso = await Curso.findAll({ where: { idCurso: req.params.id } });
-        //return res.status(200).json(curso);
-    } catch(error){
-       //return res.status(400).json({ message: 'Error al cargar el curso', error });
-    }
-};
-
-=======
 const UsuarioCurso = require('../models/usuariosCursos'); 
 const Usuario = require('../models/usuario');   
 const { request, response } = require('express');
@@ -69,7 +52,6 @@ const isAdmin = async (req, res, next) => {
     }
 };
 /*
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 const isMaestro = async(req = request,res = response, next) => {
     
     try{
@@ -156,17 +138,10 @@ const validarUsuarioEnElCurso = async (req, res, next) => {
                  success: false,
                  message: 'No hay token :C' });
         }
-<<<<<<< HEAD
-        console.log('token... ',token);
-        // 2. Verificar token y extraer datos
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log('decoded... ',decoded);
-=======
       //  console.log('token... ',token);
         // 2. Verificar token y extraer datos
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
      //   console.log('decoded... ',decoded);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         if (!decoded) {
             return res.status(401).json({
                 success: false,
@@ -176,22 +151,14 @@ const validarUsuarioEnElCurso = async (req, res, next) => {
 
         const { idUsuario } = decoded;
         const { idCurso } = req.params;
-<<<<<<< HEAD
-        console.log('idCurso... ',idCurso);
-=======
        // console.log('idCurso... ',idCurso);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         if (!idCurso || isNaN(idCurso)) {
             return res.status(400).json({
                 success: false,
                 message: 'ID de curso inválido'
             });
         }
-<<<<<<< HEAD
-        console.log('idUsuario... ',idUsuario);
-=======
       //  console.log('idUsuario... ',idUsuario);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
         jwt.verify(token, process.env.JWT_SECRET);
 
@@ -220,11 +187,7 @@ const validarUsuarioEnElCurso = async (req, res, next) => {
 module.exports = {
    // isAlumno,
     //isMaestro,
-<<<<<<< HEAD
-    //isAdmin,
-=======
     isAdmin,
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
     validarMaestroCurso,
     validarAlumnoCurso,
     validarUsuarioEnElCurso,

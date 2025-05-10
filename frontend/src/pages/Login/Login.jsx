@@ -66,11 +66,7 @@ const Login = () => {
         e.preventDefault();
         setIsLoading(true);
         try {
-<<<<<<< HEAD
-          window.location.href = "/api/admin/auth/google";
-=======
           window.location.href = `${import.meta.env.VITE_API_URL}/api/admin/auth/google`;
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         } catch (error) {
           setError("Error al redirigir a Google. Intenta nuevamente.");
           setIsLoading(false);
@@ -99,17 +95,11 @@ const Login = () => {
             setIsLoading(false);
             return;
         }
-<<<<<<< HEAD
-
-        try {
-            const response = await fetch("/api/admin/alumno1", {
-=======
 ////////////////////////////////////
 //////////////////////////////////////////
 //////////////////////////////////////////
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/alumno1`, {
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData)
