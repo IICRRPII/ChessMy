@@ -1,0 +1,622 @@
+/* Estilos generales para la demo */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  .demo-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .demo-container h1 {
+    text-align: center;
+    color: #171717;
+    margin-bottom: 30px;
+  }
+  
+  /* Estilos para el calendario */
+  .Calendario {
+    width: 100%;
+    border: 1px solid #999;
+    border-radius: 10px;
+    padding: 10px;
+    background: white;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .calendar-container {
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  #current-month-year {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+    text-transform: capitalize;
+    font-weight: 600;
+  }
+  
+  .calendar-nav {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #171717;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: all 0.2s;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .calendar-nav:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .calendar-nav:focus {
+    outline: 2px solid #2196F3;
+  }
+  .calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: #555;
+  }
+  
+  .calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+  
+  .calendar-day {
+    padding: 15px 2px 2px;
+    font-size: 0.8rem;
+    min-height: 30px;
+  }
+  .calendar-tasks {
+  max-height: 150px;
+  overflow-y: auto;
+}
+  
+  .calendar-day:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .calendar-day.today {
+    background-color: #171717;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .calendar-day.selected {
+    background-color: #272727;
+    color: white;
+    box-shadow: 0 0 0 2px #2196F3;
+  }
+  
+  .calendar-day.empty {
+    visibility: hidden;
+    pointer-events: none;
+  }
+  
+  .calendar-day.has-tasks {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+  }
+  
+  .calendar-day.has-completed {
+    background-color: #e8f5e9;
+    border: 1px solid #a5d6a7;
+  }
+  
+  .task-indicator {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 18px;
+    height: 18px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+  
+  .calendar-day.has-completed .task-indicator {
+    background-color: #2196F3;
+  }
+  
+  /* Panel de tareas */
+  .calendar-tasks {
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+    margin-top: 15px;
+    display: block;
+  }
+  
+  .calendar-tasks h4 {
+    margin-top: 0;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+  }
+  
+  #selected-date {
+    font-weight: normal;
+    font-size: 0.9em;
+    color: #666;
+  }
+  
+  .calendar-tasks ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 15px;
+    max-height: 300px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ddd #f5f5f5;
+  }
+  
+  .calendar-tasks ul::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .calendar-tasks ul::-webkit-scrollbar-track {
+    background: #f5f5f5;
+  }
+  
+  .calendar-tasks ul::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    border-radius: 6px;
+  }
+  
+  .task-item {
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    border-left: 4px solid #ddd;
+    transition: transform 0.2s;
+  }
+  
+  .task-item:hover {
+    transform: translateX(2px);
+  }
+  
+  .task-item.completed {
+    border-left-color: #4CAF50;
+  }
+  
+  .task-item.pending {
+    border-left-color: #FFC107;
+  }
+  
+  .no-tasks {
+    text-align: center;
+    color: #666;
+    padding: 15px;
+    font-style: italic;
+  }
+  
+  .error-message {
+    color: #f44336;
+    text-align: center;
+    padding: 15px;
+    background-color: #ffebee;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .error-message button {
+    background: none;
+    border: 1px solid #f44336;
+    color: #f44336;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  .error-message button:hover {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .task-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .task-status {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  
+  .task-status.completed {
+    background-color: #4CAF50;
+  }
+  
+  .task-status.pending {
+    background-color: #FFC107;
+  }
+  
+  .task-time {
+    margin-left: auto;
+    font-size: 0.9em;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .task-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85em;
+    color: #666;
+  }
+  
+  .task-teacher {
+    font-style: italic;
+  }
+  
+  .view-details-btn {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .view-details-btn:hover {
+    background-color: #0d8bf2;
+  }
+  
+  .view-details-btn svg {
+    font-size: 0.9em;
+  }
+  
+  /* Botón para agregar tarea */
+  .add-task-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #171717;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+  
+  .add-task-btn:hover {
+    background-color: #272727;
+  }
+  
+  .add-task-btn:focus {
+    outline: 2px solid #2196F3;
+    outline-offset: 2px;
+  }
+  
+  /* Modal para agregar tarea */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    overflow: auto;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .modal.show {
+    display: block;
+    opacity: 1;
+  }
+  
+  .modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 25px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    position: relative;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+  }
+  
+  .modal.show .modal-content {
+    transform: translateY(0);
+  }
+  
+  .close-modal {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    padding: 5px;
+  }
+  
+  .close-modal:hover {
+    color: #333;
+  }
+  
+  .modal h2 {
+    margin-top: 0;
+    color: #171717;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* Formulario de tarea */
+  #task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .form-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: #555;
+  }
+  
+  .form-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  
+  .form-row .form-group {
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  input, select, textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 14px;
+    transition: border-color 0.2s;
+  }
+  
+  input:focus, select:focus, textarea:focus {
+    border-color: #2196F3;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+  }
+  
+  textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+  
+  .submit-btn {
+    padding: 12px;
+    background-color: #171717;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .submit-btn:hover {
+    background-color: #272727;
+  }
+  
+  .submit-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  /* Spinner de carga */
+  .loading-spinner {
+    text-align: center;
+    padding: 15px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .loading-spinner svg {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Mejoras para el formulario */
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .cancel-btn {
+    padding: 12px;
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex: 1;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #e0e0e0;
+  }
+  
+  /* Adaptaciones responsive */
+  @media (max-width: 768px) {
+    .calendar-container.expanded {
+      width: 95%;
+      padding: 15px;
+    }
+    
+    .form-row {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .form-row .form-group {
+      min-width: 100%;
+    }
+    
+    .modal-content {
+      margin: 10% auto;
+      padding: 20px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .calendar-day {
+      padding: 20px 2px 2px;
+      font-size: 0.9em;
+    }
+    
+    .task-indicator {
+      width: 16px;
+      height: 16px;
+      font-size: 0.6rem;
+    }
+    
+    .form-actions {
+      flex-direction: column;
+    }
+    
+    .submit-btn, .cancel-btn {
+      width: 100%;
+    }
+    
+    .modal-content {
+      margin: 15% auto;
+      width: 95%;
+      padding: 15px;
+    }
+  }
+  
+  /* Notificaciones */
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    color: white;
+    background-color: #333;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    z-index: 1001;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    max-width: 300px;
+  }
+  
+  .notification.show {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  
+  .notification.fade-out {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  
+  .notification.success {
+    background-color: #4CAF50;
+  }
+  
+  .notification.error {
+    background-color: #f44336;
+  }
+  
+  .notification.info {
+    background-color: #2196F3;
+  }

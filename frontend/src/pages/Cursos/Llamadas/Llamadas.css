@@ -1,0 +1,140 @@
+/* Llamadas.css */
+
+.llamada-wrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  flex-direction: column; /* Por defecto móvil: columna */
+}
+
+.llamada-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e9e9e9;
+  padding: 16px;
+  min-height: 60vh;
+  box-sizing: border-box;
+}
+
+.controls-section {
+  flex: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background-color: #e9e9e9;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.controls {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.control-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  font-size: 1rem;
+}
+
+.mic-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.mic-button.muted {
+  background-color: #f44336;
+}
+
+.end-call {
+  background-color: #f44336;
+  color: white;
+}
+
+.icon {
+  font-size: 20px;
+}
+
+.control-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+  margin-bottom: 16px;
+  color: #333;
+  text-align: center;
+  font-size: 1.25rem;
+}
+
+/* Tablets (768px en adelante) */
+@media (min-width: 768px) {
+  
+  .llamada-wrapper {
+    flex-direction: row;
+  }
+
+  .llamada-container {
+    
+    flex: 3;
+  }
+
+  .controls-section {
+    flex: 1;
+    padding: 20px;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .control-button {
+    width: 70px;
+    height: 70px;
+  }
+
+  .icon {
+    font-size: 24px;
+  }
+}
+
+/* Desktop (1024px en adelante) */
+@media (min-width: 1024px) {
+  .controls-section {
+    padding-right: 70px;
+  }
+
+  .control-button {
+    width: 100px;
+    height: 100px;
+  }
+
+  .icon {
+    font-size: 30px;
+  }
+}
+
+/* Pantallas muy grandes (1200px en adelante) */
+@media (min-width: 1200px) {
+  .controls-section {
+    flex: 0.8;
+  }
+}

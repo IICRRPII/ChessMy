@@ -1,0 +1,386 @@
+/* Gamevs.css - Estilos específicos para el componente Gamevs */
+.gamevs-container {
+  background-color: #e9e9e9;
+  color: white;
+  height: 100%;
+  padding-inline: 20px;
+  padding-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.gamevs-title {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  color: #1a1a1a;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  text-align: center;
+}
+
+.gamevs-status {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+.gamevs-alert {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  padding: 15px 25px;
+  border-radius: 8px;
+  background: red;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Layout principal */
+.gamevs-layout {
+  display: flex;
+  flex: 1;
+  gap: 20px;
+  flex-direction: column;
+}
+
+.gamevs-left-column,
+.gamevs-center-column,
+.gamevs-right-column {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Temporizadores */
+.gamevs-timer-container {
+  background: #2a2a2a;
+  color: white;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.gamevs-timer {
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.gamevs-timer-active {
+  background: rgba(144, 165, 180, 0.3);
+  box-shadow: 0 0 10px rgba(144, 165, 180, 0.3);
+}
+
+.gamevs-timer-label {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 5px;
+}
+
+.gamevs-timer-value {
+  font-family: 'Segoe UI', monospace;
+  letter-spacing: 2px;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Tablero y opciones */
+.gamevs-center-column {
+  order: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gamevs-board-options {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.gamevs-theme-btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  background: #2a2a2a;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.gamevs-theme-btn.active {
+  background: #3a3a3a;
+  box-shadow: 0 0 10px rgba(70, 71, 71, 0.7);
+}
+
+.gamevs-theme-btn:hover {
+  background: #3a3a3a;
+}
+
+.gamevs-board-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.gamevs-board-container img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Movimientos */
+.gamevs-right-column {
+  order: 3;
+}
+
+.gamevs-moves-container {
+  background: #2a2a2a;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  height: 100%;
+}
+
+.gamevs-moves-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.gamevs-moves-table {
+  width: 100%;
+  color: white;
+  border-collapse: collapse;
+}
+
+.gamevs-moves-table th, 
+.gamevs-moves-table td {
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gamevs-moves-table-header {
+  position: sticky;
+  top: 0;
+  background: #3a3a3a;
+  z-index: 10;
+}
+
+/* Estilos para tiempos */
+.gamevs-time-critical {
+  color: #ff5555;
+}
+
+.gamevs-time-warning {
+  color: #ffff66;
+}
+
+/* Controles del tablero */
+.gamevs-board-controls {
+display: flex;
+gap: 20px;
+margin-bottom: 15px;
+flex-wrap: wrap;
+justify-content: center;
+align-items: center;
+width: 100%;
+background: #2a2a2a;
+padding: 10px;
+border-radius: 8px;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.gamevs-control-btn {
+padding: 8px 15px;
+border: none;
+border-radius: 5px;
+background: #5a5a5a;
+color: white;
+cursor: pointer;
+transition: all 0.3s;
+font-size: 0.9rem;
+}
+
+.gamevs-control-btn:hover {
+background: #4a4a4a;
+}
+
+.gamevs-control-btn.active {
+background: red;
+box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.gamevs-difficulty-selector {
+display: flex;
+align-items: center;
+gap: 8px;
+color: white;
+font-size: 0.9rem;
+}
+
+.gamevs-difficulty-selector select {
+padding: 6px 10px;
+border-radius: 5px;
+border: none;
+background: #3a3a3a;
+color: white;
+cursor: pointer;
+}
+
+/* Ajustes responsive para los controles */
+@media (max-width: 767px) {
+.gamevs-board-controls {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.gamevs-difficulty-selector {
+  justify-content: space-between;
+}
+}
+
+/* Ajustes para pantallas medianas */
+@media (min-width: 768px) and (max-width: 1023px) {
+.gamevs-board-controls {
+  gap: 8px;
+}
+
+.gamevs-control-btn {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .gamevs-layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .gamevs-left-column {
+    order: 1;
+    width: 250px;
+    flex-shrink: 0;
+  }
+
+  .gamevs-center-column {
+    order: 2;
+    flex: 1;
+    max-width: calc(100% - 500px);
+  }
+
+  .gamevs-right-column {
+    order: 3;
+    width: 250px;
+    flex-shrink: 0;
+  }
+
+  .gamevs-moves-scroll {
+    max-height: 500px;
+  }
+}
+
+@media (max-width: 767px) {
+  .gamevs-board-container {
+    max-width: 100%;
+  }
+  
+  .gamevs-timer-container,
+  .gamevs-moves-container {
+    width: 100%;
+  }
+}
+
+/* Controles de búsqueda de partida */
+.gamevs-search-container {
+background: #2a2a2a;
+padding: 20px;
+border-radius: 10px;
+margin-bottom: 20px;
+width: 100%;
+max-width: 600px;
+}
+
+.gamevs-time-controls, 
+.gamevs-color-selection {
+margin-bottom: 15px;
+}
+
+.gamevs-time-options, 
+.gamevs-color-options {
+display: flex;
+gap: 10px;
+flex-wrap: wrap;
+margin-top: 10px;
+}
+
+.gamevs-time-btn, 
+.gamevs-color-btn {
+padding: 8px 15px;
+border: none;
+border-radius: 5px;
+background: #5a5a5a;
+color: white;
+cursor: pointer;
+transition: all 0.3s;
+}
+
+.gamevs-time-btn:hover, 
+.gamevs-color-btn:hover {
+background: #4a4a4a;
+}
+
+.gamevs-time-btn.active, 
+.gamevs-color-btn.active {
+background: #007bff;
+}
+
+.gamevs-search-btn {
+padding: 10px 20px;
+background: #28a745;
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+font-size: 1rem;
+transition: all 0.3s;
+width: 100%;
+}
+
+.gamevs-search-btn:hover {
+background: #218838;
+}
+
+.gamevs-search-btn:disabled {
+background: #6c757d;
+cursor: not-allowed;
+}
+
+.gamevs-surrender-btn {
+padding: 10px 20px;
+background: #dc3545;
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+font-size: 1rem;
+transition: all 0.3s;
+margin-bottom: 20px;
+}
+
+.gamevs-surrender-btn:hover {
+background: #c82333;
+}
