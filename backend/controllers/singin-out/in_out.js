@@ -3,19 +3,11 @@ const { request, response } = require('express');
 
 const createAlumno1 = async (req = request, res = response) => {
     
-<<<<<<< HEAD
-    console.log('body1',req.body);
-
-    try {
-        const rolUsuario = 'alumno';
-        console.log('body',req.body);
-=======
     //console.log('body1',req.body);
 
     try {
         const rolUsuario = 'alumno';
         //console.log('body',req.body);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         const alumno = await Usuario.create({
             ...req.body,
             rolUsuario: rolUsuario
@@ -28,11 +20,7 @@ const createAlumno1 = async (req = request, res = response) => {
 };
 
 const getUsuarioById1 = async (req = request, res = response) => {
-<<<<<<< HEAD
-    console.log('req',req);
-=======
   //  console.log('req',req);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
     try {
         const usuario = await Usuario.findOne({ where: { idUsuario: req.params.id, isActive: null } });

@@ -6,11 +6,7 @@ require('dotenv').config();
 const PAYPAL_API_CLIENT = process.env.PAYPAL_API_CLIENT;
 const PAYPAL_API_SECRET = process.env.PAYPAL_API_SECRET;
 const PAYPAL_API = 'https://api-m.sandbox.paypal.com'; // url sandbox or live for your app
-<<<<<<< HEAD
-const HOST = 'http://localhost:8080/api/admin';
-=======
 const HOST = `${process.env.CHESSMY_BACK}/api/admin`;
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 
 // -----------NOTA PARA EL FRONT------------------
 // Para el front se necesita en el req.body monto e idUsuario
@@ -44,11 +40,7 @@ const getPlans = (req, res) => {
 };
 
 const createOrder = async (req, res) => {
-<<<<<<< HEAD
-    console.log("Request body:", req.body);
-=======
   //  console.log("Request body:", req.body);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
     const { monto, idUsuario, plan } = req.body;
     try {
         const order = {
@@ -82,11 +74,7 @@ const createOrder = async (req, res) => {
             }
         );
         const accessToken = tokenResponse.data.access_token;
-<<<<<<< HEAD
-        console.log("Access Token:", accessToken);
-=======
       //  console.log("Access Token:", accessToken);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         // Create order
         const orderResponse = await axios.post(
             `${PAYPAL_API}/v2/checkout/orders`,
@@ -98,11 +86,7 @@ const createOrder = async (req, res) => {
                 },
             }
         );
-<<<<<<< HEAD
-        console.log("Order Response:", orderResponse.data);
-=======
       //  console.log("Order Response:", orderResponse.data);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         const { id, links } = orderResponse.data;
         // Find the approval link
         const approvalLink = links.find(link => link.rel === "approve").href;
@@ -115,20 +99,12 @@ const createOrder = async (req, res) => {
             idUsuario,
             plan, // ✅ Guardar el plan en la BD
         });
-<<<<<<< HEAD
-        console.log("PAGO ON Create-order", Pago);
-=======
        // console.log("PAGO ON Create-order", Pago);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         // Redirect the user to PayPal approval URL
         return res.status(200).json({ approvalUrl: approvalLink });
     } catch (error) {
         //TODO descomentar en caso de querer ver el error, ya que el error hace que se vean las credenciales
-<<<<<<< HEAD
-        console.error("Error creating order:", error);
-=======
       //  console.error("Error creating order:", error);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         //return res.status(500).json({ message: "Something went wrong", error });
         return res.status(500).json({ message: "Something went wrong" });
     }
@@ -147,11 +123,7 @@ const captureOrder = async (req = request, res = response) => {
                 },
             }
         );
-<<<<<<< HEAD
-        console.log("Capture Response:", captureResponse.data);
-=======
       //  console.log("Capture Response:", captureResponse.data);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
         const { id, status, purchase_units } = captureResponse.data;
         // Update payment status in the database
         await Pago.update(
@@ -162,15 +134,9 @@ const captureOrder = async (req = request, res = response) => {
                 where: { idOrden: id },
             }
         );
-<<<<<<< HEAD
-        console.log("PAGO ON Capture-order", Pago);
-
-        return res.redirect("http://localhost:5173/pago-exitoso");
-=======
       //  console.log("PAGO ON Capture-order", Pago);
 
         return res.redirect(`${process.env.CHESSMY_FRONT}/pago-exitoso`);
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
     } catch (error) {
       //TODO descomentar en caso de querer ver el error, ya que el error hace que se vean las credenciales
         //console.error("Error capturing order:", error);
@@ -180,12 +146,6 @@ const captureOrder = async (req = request, res = response) => {
 };
 
 const cancelPayment = async (req = request, res = response) => {
-<<<<<<< HEAD
-    return res.redirect("/");
-};
-
-module.exports = { createOrder, captureOrder, cancelPayment, getPlans };
-=======
     //TODO verificar que sirva el redirect sino poner a que mande al CHESSMY_FRONT
     return res.redirect("/");
 };
@@ -201,4 +161,3 @@ const showPagos = async (req = request, res = response) => {
 };
 
 module.exports = { createOrder, captureOrder, cancelPayment, getPlans, showPagos };
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4

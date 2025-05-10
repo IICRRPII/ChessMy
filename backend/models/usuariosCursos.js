@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-const { DataTypes } = require('sequelize');
-=======
 const { DataTypes,Model } = require('sequelize');
->>>>>>> 51f11dc2048470616a97283ad32e7ed865f765c4
 const { sequelize } = require('../controllers/database');
 
 
