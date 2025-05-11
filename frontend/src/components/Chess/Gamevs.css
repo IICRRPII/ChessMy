@@ -384,3 +384,123 @@ margin-bottom: 20px;
 .gamevs-surrender-btn:hover {
 background: #c82333;
 }
+
+/* Selector de modo */
+.gamevs-mode-selector {
+  display: flex;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.gamevs-mode-btn {
+  flex: 1;
+  padding: 10px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+}
+
+.gamevs-mode-btn.active {
+  border-bottom-color: #2196F3;
+  color: #2196F3;
+}
+
+/* Contenedor de código */
+.gamevs-code-container {
+  text-align: center;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.gamevs-code-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+  font-size: 1.2em;
+}
+
+.gamevs-code-display span {
+  background: #f5f5f5;
+  padding: 8px 15px;
+  border-radius: 4px;
+  margin-right: 10px;
+  font-family: monospace;
+  color: #333;
+}
+
+.gamevs-code-display button {
+  padding: 8px 12px;
+  background: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Contenedor para unirse */
+.gamevs-join-container {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+  color: white;
+}
+
+.gamevs-join-container h4 {
+  margin-bottom: 10px;
+}
+
+.gamevs-join-container input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+.move-evaluation {
+  color: #ffcc00;
+  font-weight: bold;
+  margin-left: 3px;
+  font-size: 0.9em;
+}
+
+/* Para movimientos brillantes */
+.move-evaluation[data-evaluation*="!!"] {
+  color: #00ff00;
+}
+
+/* Para movimientos buenos */
+.move-evaluation[data-evaluation*="!"] {
+  color: #88ff88;
+}
+
+/* Para errores */
+.move-evaluation[data-evaluation*="?"] {
+  color: #ff8888;
+}
+
+/* Para graves errores */
+.move-evaluation[data-evaluation*="??"] {
+  color: #ff0000;
+}
+
+/* Para capturas */
+.move-evaluation[data-evaluation*="x"] {
+  color: #ff9900;
+}
+
+/* Para jaque */
+.move-evaluation[data-evaluation*="+"] {
+  color: #ff5555;
+}
+
+/* Para jaque mate */
+.move-evaluation[data-evaluation*="#"] {
+  color: #ff0000;
+  font-weight: bolder;
+}

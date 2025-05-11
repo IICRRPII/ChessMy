@@ -36,6 +36,10 @@ export default function Gamevs() {
     const [timeControl, setTimeControl] = useState(10); // 10 minutos por defecto
     const [preferredColor, setPreferredColor] = useState('random'); // 'white', 'black' o 'random'
     const [isSearchingGame, setIsSearchingGame] = useState(false);
+    const [gameMode, setGameMode] = useState('matchmaking'); // 'matchmaking' o 'custom'
+    const [customGameCode, setCustomGameCode] = useState('');
+    const [isCreatingGame, setIsCreatingGame] = useState(false);
+    const [isJoiningGame, setIsJoiningGame] = useState(false);
 
     const handleShowMoves = (square) => {
         if (!gameStarted || game.current.turn() !== playerColor) return;
@@ -114,13 +118,7 @@ export default function Gamevs() {
         });
 
         const onConnect = () => {
-            setGameStatus("Conectado, buscando partida...");
-            socket.current.emit("joinGame", (response) => {
-                if (!response?.success) {
-                    setGameStatus("Error al unirse al juego");
-                    showAlert("No se pudo unir al juego. Intente recargar.");
-                }
-            });
+            setGameStatus("Conectado, listo para jugar");
         };
 
         const onDisconnect = (reason) => {
@@ -139,7 +137,7 @@ export default function Gamevs() {
             setGameStatus(status || `Eres las ${playerColor === 'w' ? 'blancas' : 'negras'}`);
             setGameStarted(gameStarted !== false);
             setIsSearchingGame(false);
-          });
+        });
 
         socket.current.on("opponentJoined", ({ fen, clocks, gameStarted }) => {
             setGameStarted(true);
@@ -177,6 +175,19 @@ export default function Gamevs() {
 
         socket.current.on("error", (error) => {
             showAlert(error.message || "Error de conexión");
+        });
+
+        socket.current.on("customGameCreated", ({ gameCode }) => {
+            setCustomGameCode(gameCode);
+            setGameStatus(`Código de partida: ${gameCode}. Compártelo con tu amigo.`);
+        });
+
+        socket.current.on("customGameJoined", ({ gameId, playerColor, clocks }) => {
+            setGameId(gameId);
+            setPlayerColor(playerColor);
+            setClocks(clocks);
+            setGameStarted(true);
+            setGameStatus(`Partida iniciada. Eres las ${playerColor === 'w' ? 'blancas' : 'negras'}`);
         });
 
         socket.current.connect();
@@ -217,21 +228,31 @@ export default function Gamevs() {
     const renderMovesTable = () => {
         const rows = [];
         let moveNumber = 1;
-    
+
         for (let i = 0; i < moves.length; i += 2) {
             const whiteMove = moves[i];
             const blackMove = i + 1 < moves.length ? moves[i + 1] : null;
-    
+
             rows.push(
                 <tr key={moveNumber}>
                     <td>{moveNumber}</td>
-                    <td>{whiteMove || '-'}</td>
-                    <td>{blackMove || '-'}</td>
+                    <td>
+                        {whiteMove?.san || '-'}
+                        {whiteMove?.evaluation && (
+                            <span className="move-evaluation">{whiteMove.evaluation}</span>
+                        )}
+                    </td>
+                    <td>
+                        {blackMove?.san || '-'}
+                        {blackMove?.evaluation && (
+                            <span className="move-evaluation">{blackMove.evaluation}</span>
+                        )}
+                    </td>
                 </tr>
             );
             moveNumber++;
         }
-    
+
         return rows;
     };
 
@@ -270,60 +291,95 @@ export default function Gamevs() {
     };
 
     const customPieces = () => {
-            const pieceSize = boardSize / 8;
-            return {
-                wK: () => <img src={wK} style={{ width: pieceSize, height: pieceSize }} alt="White King" />,
-                wQ: () => <img src={wQ} style={{ width: pieceSize, height: pieceSize }} alt="White Queen" />,
-                wR: () => <img src={wR} style={{ width: pieceSize, height: pieceSize }} alt="White Rook" />,
-                wB: () => <img src={wB} style={{ width: pieceSize, height: pieceSize }} alt="White Bishop" />,
-                wN: () => <img src={wN} style={{ width: pieceSize, height: pieceSize }} alt="White Knight" />,
-                wP: () => <img src={wP} style={{ width: pieceSize, height: pieceSize }} alt="White Pawn" />,
-                bK: () => <img src={bK} style={{ width: pieceSize, height: pieceSize }} alt="Black King" />,
-                bQ: () => <img src={bQ} style={{ width: pieceSize, height: pieceSize }} alt="Black Queen" />,
-                bR: () => <img src={bR} style={{ width: pieceSize, height: pieceSize }} alt="Black Rook" />,
-                bB: () => <img src={bB} style={{ width: pieceSize, height: pieceSize }} alt="Black Bishop" />,
-                bN: () => <img src={bN} style={{ width: pieceSize, height: pieceSize }} alt="Black Knight" />,
-                bP: () => <img src={bP} style={{ width: pieceSize, height: pieceSize }} alt="Black Pawn" />
-            };
+        const pieceSize = boardSize / 8;
+        return {
+            wK: () => <img src={wK} style={{ width: pieceSize, height: pieceSize }} alt="White King" />,
+            wQ: () => <img src={wQ} style={{ width: pieceSize, height: pieceSize }} alt="White Queen" />,
+            wR: () => <img src={wR} style={{ width: pieceSize, height: pieceSize }} alt="White Rook" />,
+            wB: () => <img src={wB} style={{ width: pieceSize, height: pieceSize }} alt="White Bishop" />,
+            wN: () => <img src={wN} style={{ width: pieceSize, height: pieceSize }} alt="White Knight" />,
+            wP: () => <img src={wP} style={{ width: pieceSize, height: pieceSize }} alt="White Pawn" />,
+            bK: () => <img src={bK} style={{ width: pieceSize, height: pieceSize }} alt="Black King" />,
+            bQ: () => <img src={bQ} style={{ width: pieceSize, height: pieceSize }} alt="Black Queen" />,
+            bR: () => <img src={bR} style={{ width: pieceSize, height: pieceSize }} alt="Black Rook" />,
+            bB: () => <img src={bB} style={{ width: pieceSize, height: pieceSize }} alt="Black Bishop" />,
+            bN: () => <img src={bN} style={{ width: pieceSize, height: pieceSize }} alt="Black Knight" />,
+            bP: () => <img src={bP} style={{ width: pieceSize, height: pieceSize }} alt="Black Pawn" />
+        };
     };
 
     const handleTimeControlChange = (minutes) => {
         setTimeControl(minutes);
-      };
-      
-      const handleColorPreference = (color) => {
+    };
+    
+    const handleColorPreference = (color) => {
         setPreferredColor(color);
-      };
-      
-      const handleSurrender = () => {
+    };
+    
+    const handleSurrender = () => {
         if (!gameStarted || !gameId) return;
         
         socket.current.emit("surrender", { gameId }, (response) => {
-          if (response.success) {
-            showAlert("Te has rendido");
-            setGameStarted(false);
-            setGameStatus("Partida terminada (rendición)");
-          }
+            if (response.success) {
+                showAlert("Te has rendido");
+                setGameStarted(false);
+                setGameStatus("Partida terminada (rendición)");
+            }
         });
-      };
-      
-      const handleSearchGame = () => {
+    };
+    
+    const handleSearchGame = () => {
         if (isSearchingGame) return;
         
         setIsSearchingGame(true);
         setGameStatus(`Buscando partida (${timeControl} min)...`);
         
         socket.current.emit("searchGame", { 
-          timeControl, 
-          preferredColor 
+            timeControl, 
+            preferredColor 
         }, (response) => {
-          if (!response?.success) {
-            setIsSearchingGame(false);
-            showAlert("Error al buscar partida");
-            setGameStatus("Error al buscar partida");
-          }
+            if (!response?.success) {
+                setIsSearchingGame(false);
+                showAlert("Error al buscar partida");
+                setGameStatus("Error al buscar partida");
+            }
         });
-      };
+    };
+
+    const handleCreateCustomGame = () => {
+        setIsCreatingGame(true);
+        socket.current.emit("createCustomGame", { 
+            timeControl,
+            preferredColor 
+        }, (response) => {
+            if (!response?.success) {
+                setIsCreatingGame(false);
+                showAlert("Error al crear partida");
+            }
+        });
+    };
+
+    const handleJoinCustomGame = () => {
+        if (!customGameCode.trim()) {
+            showAlert("Ingresa un código de partida");
+            return;
+        }
+
+        setIsJoiningGame(true);
+        socket.current.emit("joinCustomGame", { 
+            gameCode: customGameCode.trim()
+        }, (response) => {
+            setIsJoiningGame(false);
+            if (!response?.success) {
+                showAlert(response.error || "No se pudo unir a la partida");
+            }
+        });
+    };
+
+    const handleCopyGameCode = () => {
+        navigator.clipboard.writeText(customGameCode);
+        showAlert("Código copiado al portapapeles");
+    };
 
     return (
         <>
@@ -362,67 +418,168 @@ export default function Gamevs() {
                             </div>
                         </div>
                     </div>
-                    {!gameStarted && (
-                        <div className="gamevs-search-container">
-                            <div className="gamevs-time-controls">
-                            <h4>Tiempo de juego:</h4>
-                            <div className="gamevs-time-options">
-                                {[1, 5, 10, 15, 30, 60].map(minutes => (
-                                <button
-                                    key={minutes}
-                                    className={`gamevs-time-btn ${timeControl === minutes ? 'active' : ''}`}
-                                    onClick={() => handleTimeControlChange(minutes)}
-                                >
-                                    {minutes} min
-                                </button>
-                                ))}
-                            </div>
-                            </div>
 
-                            <div className="gamevs-color-selection">
-                            <h4>Color preferido:</h4>
-                            <div className="gamevs-color-options">
-                                <button
-                                className={`gamevs-color-btn ${preferredColor === 'white' ? 'active' : ''}`}
-                                onClick={() => handleColorPreference('white')}
-                                >
-                                Blancas
-                                </button>
-                                <button
-                                className={`gamevs-color-btn ${preferredColor === 'black' ? 'active' : ''}`}
-                                onClick={() => handleColorPreference('black')}
-                                >
-                                Negras
-                                </button>
-                                <button
-                                className={`gamevs-color-btn ${preferredColor === 'random' ? 'active' : ''}`}
-                                onClick={() => handleColorPreference('random')}
-                                >
-                                Aleatorio
-                                </button>
-                            </div>
-                            </div>
+                    {/* Columna central - Tablero y controles */}
+                    <div className="gamevs-center-column">
+                        {!gameStarted && (
+                            <div className="gamevs-search-container">
+                                <div className="gamevs-mode-selector">
+                                    <button 
+                                        className={`gamevs-mode-btn ${gameMode === 'matchmaking' ? 'active' : ''}`}
+                                        onClick={() => setGameMode('matchmaking')}
+                                    >
+                                        Partida Aleatoria
+                                    </button>
+                                    <button 
+                                        className={`gamevs-mode-btn ${gameMode === 'custom' ? 'active' : ''}`}
+                                        onClick={() => setGameMode('custom')}
+                                    >
+                                        Partida Personalizada
+                                    </button>
+                                </div>
 
-                            <button 
-                            className="gamevs-search-btn"
-                            onClick={handleSearchGame}
-                            disabled={isSearchingGame}
-                            >
-                            {isSearchingGame ? 'Buscando oponente...' : 'Buscar Partida'}
-                            </button>
-                        </div>
+                                {gameMode === 'matchmaking' ? (
+                                    <>
+                                        <div className="gamevs-time-controls">
+                                            <h4>Tiempo de juego:</h4>
+                                            <div className="gamevs-time-options">
+                                                {[1, 5, 10, 15, 30, 60].map(minutes => (
+                                                <button
+                                                    key={minutes}
+                                                    className={`gamevs-time-btn ${timeControl === minutes ? 'active' : ''}`}
+                                                    onClick={() => handleTimeControlChange(minutes)}
+                                                >
+                                                    {minutes} min
+                                                </button>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div className="gamevs-color-selection">
+                                            <h4>Color preferido:</h4>
+                                            <div className="gamevs-color-options">
+                                                <button
+                                                className={`gamevs-color-btn ${preferredColor === 'white' ? 'active' : ''}`}
+                                                onClick={() => handleColorPreference('white')}
+                                                >
+                                                Blancas
+                                                </button>
+                                                <button
+                                                className={`gamevs-color-btn ${preferredColor === 'black' ? 'active' : ''}`}
+                                                onClick={() => handleColorPreference('black')}
+                                                >
+                                                Negras
+                                                </button>
+                                                <button
+                                                className={`gamevs-color-btn ${preferredColor === 'random' ? 'active' : ''}`}
+                                                onClick={() => handleColorPreference('random')}
+                                                >
+                                                Aleatorio
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <button 
+                                            className="gamevs-search-btn"
+                                            onClick={handleSearchGame}
+                                            disabled={isSearchingGame}
+                                        >
+                                            {isSearchingGame ? 'Buscando oponente...' : 'Buscar Partida'}
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        {!customGameCode ? (
+                                            <>
+                                                <div className="gamevs-time-controls">
+                                                    <h4>Tiempo de juego:</h4>
+                                                    <div className="gamevs-time-options">
+                                                        {[1, 5, 10, 15, 30, 60].map(minutes => (
+                                                        <button
+                                                            key={minutes}
+                                                            className={`gamevs-time-btn ${timeControl === minutes ? 'active' : ''}`}
+                                                            onClick={() => handleTimeControlChange(minutes)}
+                                                        >
+                                                            {minutes} min
+                                                        </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                <div className="gamevs-color-selection">
+                                                    <h4>Tu color:</h4>
+                                                    <div className="gamevs-color-options">
+                                                        <button
+                                                        className={`gamevs-color-btn ${preferredColor === 'white' ? 'active' : ''}`}
+                                                        onClick={() => handleColorPreference('white')}
+                                                        >
+                                                        Blancas
+                                                        </button>
+                                                        <button
+                                                        className={`gamevs-color-btn ${preferredColor === 'black' ? 'active' : ''}`}
+                                                        onClick={() => handleColorPreference('black')}
+                                                        >
+                                                        Negras
+                                                        </button>
+                                                        <button
+                                                        className={`gamevs-color-btn ${preferredColor === 'random' ? 'active' : ''}`}
+                                                        onClick={() => handleColorPreference('random')}
+                                                        >
+                                                        Aleatorio
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <button 
+                                                    className="gamevs-search-btn"
+                                                    onClick={handleCreateCustomGame}
+                                                    disabled={isCreatingGame}
+                                                >
+                                                    {isCreatingGame ? 'Creando partida...' : 'Crear Partida'}
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <div className="gamevs-code-container">
+                                                <h4>Código de partida:</h4>
+                                                <div className="gamevs-code-display">
+                                                    <span>{customGameCode}</span>
+                                                    <button onClick={handleCopyGameCode}>Copiar</button>
+                                                </div>
+                                                <p>Comparte este código con tu amigo para que se una</p>
+                                                <p>Esperando jugador...</p>
+                                            </div>
+                                        )}
+
+                                        <div className="gamevs-join-container">
+                                            <h4>Unirse a partida:</h4>
+                                            <input
+                                                type="text"
+                                                placeholder="Ingresa código de partida"
+                                                value={customGameCode}
+                                                onChange={(e) => setCustomGameCode(e.target.value)}
+                                            />
+                                            <button 
+                                                className="gamevs-search-btn"
+                                                onClick={handleJoinCustomGame}
+                                                disabled={isJoiningGame}
+                                            >
+                                                {isJoiningGame ? 'Uniéndose...' : 'Unirse a Partida'}
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
                         )}
 
                         {gameStarted && (
-                        <button 
-                            className="gamevs-surrender-btn"
-                            onClick={handleSurrender}
-                        >
-                            Rendirse
-                        </button>
+                            <button 
+                                className="gamevs-surrender-btn"
+                                onClick={handleSurrender}
+                            >
+                                Rendirse
+                            </button>
                         )}
-                    {/* Columna central - Tablero */}
-                    <div className="gamevs-center-column">
+
                         <div className="gamevs-board-options">
                             <button 
                                 className={`gamevs-theme-btn ${boardTheme === 'red' ? 'active' : ''}`}
