@@ -1,0 +1,105 @@
+/* Estilos del layout principal */
+.layout-container {
+  min-height: 100vh;
+}
+
+/* Estilos del logo en el sidebar */
+.demo-logo-vertical {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.demo-logo-vertical.collapsed {
+  font-size: 16px;
+}
+
+.demo-logo-vertical.expanded {
+  font-size: 20px;
+}
+
+/* Estilos del contenido principal */
+.content-container {
+  margin: 24px 16px;
+  padding: 24px;
+  min-height: 280px;
+  border-radius: 8px;
+}
+
+/* Estilos de las tarjetas de cursos */
+.course-card {
+  border-radius: 8px;
+  height: 100%;
+}
+
+.course-card-cover {
+  height: 100px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  opacity: 0.3;
+}
+
+.course-title {
+  margin-bottom: 4px;
+}
+
+.course-code {
+  margin-bottom: 4px;
+  color: #666;
+}
+
+.course-teacher {
+  color: #888;
+}
+
+/* Sidebar principal */
+.ant-layout-sider {
+  background: #212121 !important; /* Color azul oscuro */
+}
+
+/* Contenedor del logo */
+.logo-container {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #212121; /* Fondo del área del logo */
+}
+
+/* Logo expandido */
+.logo-expanded {
+  height: auto;
+  max-width: 80%;
+  transition: all 0.3s;
+}
+
+/* Logo colapsado */
+.logo-collapsed {
+  width: 80px;
+  height: 40px;
+  object-fit: contain;
+  transition: all 0.3s;
+}
+
+/* Menú */
+.ant-menu-dark {
+  background: #212121 !important;
+}
+
+.ant-menu-dark .ant-menu-item-selected {
+  background-color: #414141 !important; /* Color para ítem seleccionado */
+}
+
+/* Íconos y texto del menú */
+.ant-menu-dark .ant-menu-item, 
+.ant-menu-dark .ant-menu-item a {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.ant-menu-dark .ant-menu-item:hover {
+  background-color: #717171 !important; /* Color hover */
+}

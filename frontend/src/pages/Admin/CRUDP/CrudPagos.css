@@ -1,0 +1,71 @@
+.layout-container {
+  height: 100vh;
+}
+
+.content-container {
+  margin: 0;
+  padding: 24px;
+  min-height: calc(100vh - 64px);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.logo-collapsed {
+  max-height: 40px;
+  max-width: 40px;
+}
+
+.logo-expanded {
+  max-height: 100px;
+  max-width: 200px;
+}
+
+/* Estilos para la tabla en móviles */
+@media (max-width: 768px) {
+  .ant-table {
+    width: 100%;
+    overflow-x: auto;
+    display: block;
+  }
+  
+  .ant-table-content {
+    overflow-x: auto;
+  }
+  
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td {
+    white-space: nowrap;
+    padding: 8px !important;
+  }
+}
+
+/* Estilos para el menú en móviles */
+@media (max-width: 576px) {
+  .ant-layout-sider {
+    position: absolute !important;
+    z-index: 100;
+    height: 100vh;
+  }
+  
+  .ant-layout-header {
+    padding: 0 10px !important;
+  }
+  
+  .content-container {
+    padding: 16px !important;
+  }
+  
+  .ant-table-tbody > tr > td {
+    font-size: 12px;
+  }
+  
+  .ant-tag {
+    font-size: 12px;
+    padding: 0 4px;
+  }
+}
