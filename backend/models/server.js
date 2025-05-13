@@ -115,44 +115,45 @@ class Server {
         // Función para evaluar movimientos con chess-web-api
         async function evaluateMove(fen, move) {
             try {
-                // Primero evaluamos con reglas básicas
                 let evaluation = '';
                 const tempGame = new Chess(fen);
+                
+                // Verificamos si el movimiento es válido antes de intentar hacerlo
+                const possibleMoves = tempGame.moves({ verbose: true });
+                const isValidMove = possibleMoves.some(m => 
+                    m.from === move.from && 
+                    m.to === move.to && 
+                    (!move.promotion || m.promotion === move.promotion)
+                );
+        
+                if (!isValidMove) {
+                    console.log("Movimiento no válido para evaluación:", move);
+                    return '';
+                }
+        
                 const result = tempGame.move(move);
-
-                // Verificar si es captura
+                
+                // Análisis básico
                 if (result.captured) {
                     evaluation += 'x';
-                    // Captura de pieza de mayor valor
                     if (result.piece.toLowerCase() === 'p' && result.captured.toLowerCase() !== 'p') {
-                        evaluation += '!';
+                        evaluation += '!'; // Buena captura
                     }
                 }
-
-                // Verificar jaque
-                if (tempGame.isCheck()) {
-                    evaluation += '+';
+        
+                if (tempGame.isCheck()) evaluation += '+';
+                if (tempGame.isCheckmate()) evaluation += '#';
+        
+                // Análisis más avanzado (sin chess-web-api que parece estar causando problemas)
+                // Evaluación simple basada en reglas
+                if (result.flags.includes('c')) { // Movimiento de captura
+                    evaluation += '!';
                 }
-
-                // Verificar jaque mate
-                if (tempGame.isCheckmate()) {
-                    evaluation += '#';
+        
+                if (result.flags.includes('k') || result.flags.includes('q')) { // Enroque
+                    evaluation += '!!';
                 }
-
-                // Luego hacemos una evaluación más avanzada con chess-web-api
-                const analysis = await this.chessAPI.getMoveEvaluation(fen, move.san);
-                
-                if (analysis && analysis.eval) {
-                    const score = analysis.eval.score;
-                    if (score) {
-                        const value = score.value;
-                        if (value > 150) evaluation += '!!';
-                        else if (value > 50) evaluation += '!';
-                        else if (value < -150) evaluation += '??';
-                        else if (value < -50) evaluation += '?';
-                    }
-                }
-
+        
                 return evaluation;
             } catch (error) {
                 console.error("Error en evaluateMove:", error);
@@ -382,16 +383,17 @@ class Server {
             socket.on("move", async ({ gameId, move }) => {
                 const game = games[gameId];
                 if (!game || !game.players.some(p => p.id === socket.id)) return;
-
+            
                 try {
+                    // Primero validamos el movimiento en el juego principal
                     const result = game.board.move(move);
                     if (!result) {
                         socket.emit("invalidMove", { reason: "Movimiento inválido" });
                         return;
                     }
-
-                    // Evaluar el movimiento
-                    const evaluation = await evaluateMove(game.board.fen(), result);
+            
+                    // Evaluamos el movimiento con la posición anterior
+                    const evaluation = await evaluateMove(move.before, move);
                     result.evaluation = evaluation;
                     
                     game.moves.push(result);
@@ -401,14 +403,18 @@ class Server {
                     const currentTurn = game.board.turn() === "w" ? "b" : "w";
                     game.clocks[currentTurn] = Math.max(0, game.clocks[currentTurn] - elapsed);
                     game.turnStartTime = now;
-
+            
+                    // Enviamos el movimiento con la evaluación
                     gameNamespace.to(gameId).emit("moveMade", {
                         fen: game.board.fen(),
-                        move: result,
-                        clocks: game.clocks,
-                        moveSan: result.san + evaluation
+                        move: {
+                            ...result,
+                            san: result.san, // Aseguramos que san está incluido
+                            evaluation: result.evaluation
+                        },
+                        clocks: game.clocks
                     });
-
+            
                     if (game.board.isGameOver()) {
                         let winner, reason;
                         
@@ -421,15 +427,16 @@ class Server {
                         } else {
                             reason = "Juego terminado";
                         }
-
+            
                         gameNamespace.to(gameId).emit("gameOver", { winner, reason });
                         delete games[gameId];
                         return;
                     }
-
+            
                     startTurnTimer(gameId);
                 } catch (error) {
-                    socket.emit("invalidMove", { reason: error.message });
+                    console.error("Error en movimiento:", error);
+                    socket.emit("invalidMove", { reason: "Error en el movimiento" });
                 }
             });
 

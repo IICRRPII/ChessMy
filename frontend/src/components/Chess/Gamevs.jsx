@@ -158,7 +158,12 @@ export default function Gamevs() {
             
             setMoves(prev => {
                 const newMoves = [...prev];
-                newMoves.push(move.san || move.moveSan);
+                // Asegúrate de que el movimiento tiene las propiedades necesarias
+                const moveToAdd = {
+                    san: move.san,
+                    evaluation: move.evaluation || ''
+                };
+                newMoves.push(moveToAdd);
                 return newMoves;
             });
         
@@ -228,22 +233,26 @@ export default function Gamevs() {
     const renderMovesTable = () => {
         const rows = [];
         let moveNumber = 1;
-
+    
         for (let i = 0; i < moves.length; i += 2) {
             const whiteMove = moves[i];
             const blackMove = i + 1 < moves.length ? moves[i + 1] : null;
-
+    
+            // Asegúrate de que estamos accediendo a las propiedades correctas
+            const whiteMoveText = whiteMove?.san || '-';
+            const blackMoveText = blackMove?.san || '-';
+    
             rows.push(
                 <tr key={moveNumber}>
                     <td>{moveNumber}</td>
                     <td>
-                        {whiteMove?.san || '-'}
+                        {whiteMoveText}
                         {whiteMove?.evaluation && (
                             <span className="move-evaluation">{whiteMove.evaluation}</span>
                         )}
                     </td>
                     <td>
-                        {blackMove?.san || '-'}
+                        {blackMoveText}
                         {blackMove?.evaluation && (
                             <span className="move-evaluation">{blackMove.evaluation}</span>
                         )}
@@ -252,7 +261,7 @@ export default function Gamevs() {
             );
             moveNumber++;
         }
-
+    
         return rows;
     };
 
