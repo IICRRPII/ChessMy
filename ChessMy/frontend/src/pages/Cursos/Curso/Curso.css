@@ -1,0 +1,705 @@
+/* Variables de diseño */
+:root {
+  --primary-color: #1a73e8;
+  --primary-dark: #1765cc;
+  --secondary-color: #f1f3f4;
+  --text-color: #545457;
+  --text-light: #5f6368;
+  --border-color: #dadce0;
+  --white: #ffffff;
+  --teacher-color: #0a52b1; /* Color destacado para el maestro */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md: 0 2px 4px rgba(0,0,0,0.1);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+}
+
+/* Reset y estilos base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  color: var(--text-color);
+  line-height: 1.5;
+}
+
+/* Agrega esto a tu archivo Curso.css */
+.delete-comment-button {
+  background: none;
+  border: none;
+  color: #e53e3e;
+  cursor: pointer;
+  padding: 2px;
+  margin-left: 0px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.delete-comment-button:hover {
+  opacity: 1;
+}
+
+.delete-comment-button .material-icons {
+  font-size: 18px;
+}
+
+/* Contenedor principal */
+.curso-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Layout principal responsive */
+.app-layout {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+/* Sidebar */
+.app-sidebar {
+  width: 100%;
+  background-color: var(--white);
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Sección de llamada */
+.call-section {
+  background-color: var(--white);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.call-info h3 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--text-color);
+}
+
+.call-info p {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 12px;
+}
+
+.join-call-button {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  background: #373737;
+}
+
+.join-call-button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  background-color: #474747;
+}
+
+/* Sección de calendario */
+.calendar-section {
+  margin-top: 20px;
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+/**/
+
+/**/
+.mini-calendar {
+  margin-bottom: 20px;
+}
+
+.calendar-header h4 {
+  margin: 0;
+  text-align: center;
+  font-size: 16px;
+  color: #333;
+  text-transform: capitalize;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin: 10px 0;
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.day {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  position: relative;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.day:hover {
+  background-color: #f0f0f0;
+}
+
+.day.other-month {
+  color: #ccc;
+}
+
+.day.today {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  font-weight: bold;
+}
+
+.event-dot {
+  position: absolute;
+  bottom: 2px;
+  width: 4px;
+  height: 4px;
+  background-color: #f44336;
+  border-radius: 50%;
+}
+
+.upcoming-events h4 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.event-item {
+  display: flex;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.event-date {
+  min-width: 40px;
+  text-align: center;
+  font-size: 12px;
+  color: #1976d2;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.event-details {
+  margin-left: 10px;
+}
+
+.event-title {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.event-time {
+  font-size: 12px;
+  color: #666;
+}
+
+.no-events {
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+  margin: 10px 0;
+}
+/**/
+.sidebar-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-light);
+  text-transform: uppercase;
+}
+
+.calendar-placeholder {
+  height: 200px;
+  background-color: var(--secondary-color);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
+}
+
+/* Contenido principal */
+.app-content {
+  flex: 1;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-header {
+  padding: 12px 16px;
+  background-color: var(--white);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.content-header h1 {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* Formulario de publicación */
+.compose-post {
+  background-color: var(--white);
+  border-radius: var(--radius-md);
+  margin: 12px;
+  padding: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.post-title-input {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-family: inherit;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.post-content-input {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-family: inherit;
+  min-height: 80px;
+  resize: vertical;
+}
+
+.compose-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submit-post-button {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submit-post-button:hover {
+  background-color: var(--primary-dark);
+}
+
+/* Feed de publicaciones */
+.posts-feed {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.post {
+  background-color: var(--white);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.post:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.post-author {
+  font-weight: 600;
+  color: var(--teacher-color); /* Color destacado para el maestro */
+}
+
+.post-date {
+  color: var(--text-light);
+  font-size: 12px;
+}
+
+.post-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-color);
+}
+
+.post-text {
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.post-actions {
+  margin-top: 12px;
+}
+
+.comment-toggle-button {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.comment-toggle-button:hover {
+  text-decoration: underline;
+}
+
+/* Comentarios */
+.post-comments {
+  margin-top: 16px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 16px;
+  max-height: 300px;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.comment {
+  margin-bottom: 12px;
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s;
+}
+
+.comment:hover {
+  background-color: #f0f0f0;
+}
+
+.comment-content {
+  margin-left: 8px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.comment-date {
+  color: var(--text-light);
+  font-size: 12px;
+}
+
+.comment-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.new-comment-container {
+  margin-top: 16px;
+}
+
+.new-comment {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 6px 12px;
+  background: var(--white);
+  transition: border-color 0.2s;
+}
+
+.new-comment:focus-within {
+  border-color: var(--primary-color);
+}
+
+.new-comment input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 8px;
+  background: transparent;
+  font-size: 14px;
+}
+
+.comment-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.comment-icon-button {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  font-size: 18px;
+  transition: color 0.2s;
+  padding: 4px;
+}
+
+.comment-icon-button:hover {
+  color: var(--text-color);
+}
+
+.send-comment-button {
+  background: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.send-comment-button:hover {
+  background: var(--primary-dark);
+}
+
+/* Estado vacío */
+.empty-feed {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--text-light);
+}
+
+.empty-icon {
+  width: 64px;
+  height: 64px;
+  background-color: var(--secondary-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.empty-feed h3 {
+  color: var(--text-color);
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+/* Alertas */
+.alert {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  margin: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alert-error {
+  background-color: #fdecea;
+  color: #d23f31;
+}
+
+.alert-success {
+  background-color: #e6f4ea;
+  color: #1e8e3e;
+}
+
+/* Loading */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid var(--primary-color);
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos para el botón especial de maestros */
+.teacher-actions {
+  margin: 20px 0;
+  text-align: right;
+}
+
+.teacher-special-button {
+  background-color: #272727;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.teacher-special-button:hover {
+  background-color: #373737;
+}
+
+/* Media Queries para responsive */
+@media (min-width: 768px) {
+  .app-layout {
+    flex-direction: row;
+  }
+  
+  .app-sidebar {
+    width: 280px;
+    border-right: 1px solid var(--border-color);
+    border-bottom: none;
+    padding: 16px;
+  }
+  
+  .calendar-placeholder {
+    height: 250px;
+  }
+  
+  .content-header {
+    padding: 16px 24px;
+  }
+  
+  .content-header h1 {
+    font-size: 20px;
+  }
+  
+  .compose-post,
+  .posts-feed {
+    padding: 16px;
+    margin: 16px;
+  }
+  
+  .post {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-sidebar {
+    width: 320px;
+  }
+  
+  .call-info h3 {
+    font-size: 17px;
+  }
+  
+  .calendar-placeholder {
+    height: 300px;
+  }
+  
+  .post-title {
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .app-sidebar {
+    width: 350px;
+  }
+  
+  .app-content {
+    padding: 0 40px;
+  }
+}
+
+/* Ajustes para móvil en landscape */
+@media (max-width: 767px) and (orientation: landscape) {
+  .app-sidebar {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .call-section,
+  .calendar-section {
+    flex: 1 1 45%;
+    min-width: 200px;
+  }
+  
+  .calendar-placeholder {
+    height: 180px;
+  }
+}
+
+/* Mejoras para móviles pequeños */
+@media (max-width: 480px) {
+  .join-call-button {
+    padding: 12px;
+    font-size: 15px;
+  }
+  
+  .post {
+    padding: 12px;
+  }
+  
+  .post-title {
+    font-size: 16px;
+  }
+}

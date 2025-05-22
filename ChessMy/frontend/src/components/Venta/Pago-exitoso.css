@@ -1,0 +1,217 @@
+/* Contenedor general */
+.pago-exitoso-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f7f9fc;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center; /* Centrado en el contenedor */
+    align-items: center; /* Centrado vertical */
+    height: 100vh; /* Asegura que el contenedor ocupe toda la pantalla */
+}
+  
+/* Grid de columnas */
+.pago-exitoso-grid {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    width: 70%; /* 70% de ancho */
+    margin: 0 auto; /* Centrado */
+    max-width: 1200px; /* Maximo ancho para evitar que se haga muy grande */
+    max-height: 600px; /* Limita la altura máxima */
+  }
+  
+/* Columna del formulario */
+.formulario-columna {
+  flex: 1;
+  min-width: 400px;
+  background-color: #ffffff;
+  padding-inline: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  height: 100%; /* Asegura que las columnas llenen el espacio */
+  width: 100%;
+}
+  
+/* Encabezados */
+.formulario-titulo {
+    font-size: 1.8rem;
+    color: #222;
+    margin-bottom: 0.5rem;
+}
+  
+.formulario-subtitulo {
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+  
+/* Formulario */
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+    width: 100%;
+}
+
+  
+.required {
+    color: red;
+}
+  
+input,
+select,
+textarea {
+    border-radius: 8px;
+    background-color: white;
+    border: 1px solid black;
+    transition: border 0.3s ease;
+    font-size: 1rem;
+}
+form{
+    padding: 0rem 0rem;
+}  
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+  
+/* Footer del formulario */
+.form-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group{
+    width: 300px;
+}
+  
+.required-fields {
+    font-size: 0.9rem;
+    color: #888;
+}
+  
+.submit-btn {
+    background-color: #171717;
+    color: #fff;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 200px;
+    margin: 1rem;
+}
+  
+.submit-btn:hover {
+    background-color: #373737;
+}
+  
+/* Mensaje de éxito */
+.mensaje-exito {
+    text-align: center;
+    padding: 1rem;
+    background-color: #e6ffe6;
+    border: 1px solid #00cc66;
+    border-radius: 10px;
+    color: #2d662d;
+    margin-block: 1rem;
+}
+  
+.icono-exito {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+  
+/* Error */
+.mensaje-error {
+    margin-top: 1rem;
+    color: #d8000c;
+    background-color: #ffd2d2;
+    padding: 1rem;
+    border-radius: 8px;
+}
+  
+/* Columna del mensaje */
+.mensaje-columna {
+  flex: 2;
+  min-width: 320px;
+  background: linear-gradient(135deg, #171717 0%, #015e63 100%);
+  color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* Asegura que las columnas llenen el espacio */
+}
+  
+.mensaje-contenido {
+    max-width: 400px;
+    text-align: center;
+}
+  
+.icono-bienvenida {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+  
+.mensaje-contenido h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+  
+.mensaje-destacado {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    font-weight: 500;
+}
+  
+.mensaje-lista {
+    list-style: none;
+    padding-left: 0;
+    text-align: left;
+    margin: 1rem 0;
+}
+  
+.mensaje-lista li {
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+  
+.mensaje-pie {
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: #f0f8ff;
+}
+  
+.form-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 0.3rem;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+@media (max-width: 768px) {
+    .pago-exitoso-grid {
+      flex-direction: column;
+    }
+  
+    .mensaje-columna {
+      order: -1;
+    }
+  }
+  

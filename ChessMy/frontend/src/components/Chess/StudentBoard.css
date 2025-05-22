@@ -1,0 +1,100 @@
+/* StudentBoard.css - Estilos específicos para el componente StudentBoard */
+.student-container {
+  background-color: #e9e9e9;
+  color: #1a1a1a;
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.student-title {
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.student-room-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.student-room-code {
+  flex: 1;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.student-join-btn {
+  padding: 12px 25px;
+  background-color: #4a6baf;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.student-join-btn:hover:not(:disabled) {
+  background-color: #3a5a9f;
+}
+
+.student-join-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.student-leave-btn {
+  padding: 12px 25px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.student-leave-btn:hover {
+  background-color: #c82333;
+}
+
+.student-board-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.student-board-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+@media (max-width: 768px) {
+  .student-title {
+    font-size: 1.8rem;
+  }
+  
+  .student-room-input {
+    flex-direction: column;
+  }
+  
+  .student-room-code,
+  .student-join-btn,
+  .student-leave-btn {
+    width: 100%;
+  }
+}

@@ -1,0 +1,105 @@
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.profile-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.profile-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 200px;
+}
+
+.profile-avatar {
+  margin-bottom: 20px;
+  font-size: 64px;
+  background-color: #f0f2f5;
+}
+
+.profile-form {
+  flex: 1;
+  min-width: 300px;
+}
+
+.profile-info-text {
+  padding: 8px 0;
+  min-height: 32px;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.profile-upload-dragger {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fafafa;
+  border: 1px dashed #d9d9d9;
+  cursor: pointer;
+}
+
+.profile-upload-dragger:hover {
+  border-color: #1890ff;
+}
+
+.profile-upload-dragger .ant-upload {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-upload-dragger .ant-upload-text {
+  margin: 8px 0 4px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.profile-upload-dragger .ant-upload-hint {
+  font-size: 12px;
+  padding: 0 10px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.profile-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.avatar-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .profile-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .profile-form {
+    width: 100%;
+  }
+}
+
+.ant-form-item-label label {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.85);
+}
